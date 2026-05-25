@@ -4,6 +4,7 @@ import { Column, Line, Pie } from '@ant-design/charts'
 import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchOverviewKPI, fetchRequestsTrend, fetchTokenTrend,
   fetchModelDistribution, fetchErrorTrend,
@@ -166,6 +167,7 @@ export default function Overview() {
               data={requestsTrend}
               xField="date"
               yField="value"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Requests' } }}
             />
           </ChartCard>
@@ -187,6 +189,7 @@ export default function Overview() {
               xField="date"
               yField="tokens"
               colorField="type"
+              color={CHART_COLORS}
             />
           </ChartCard>
         </Col>
@@ -207,6 +210,7 @@ export default function Overview() {
               data={modelDist}
               angleField="request_count"
               colorField="model_id"
+              color={CHART_COLORS}
               label={{ text: 'percentage', style: { fontSize: 10 } }}
               legend={{ color: { title: false, position: 'right', row: 5 } }}
             />
@@ -225,6 +229,7 @@ export default function Overview() {
               data={errorTrend}
               xField="date"
               yField="error_rate"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Error Rate (%)' } }}
             />
           </ChartCard>

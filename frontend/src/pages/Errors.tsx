@@ -4,6 +4,7 @@ import { Column, Line, Pie } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchErrorRateTrend, fetchErrorTypeDistribution,
   fetchErrorByModel, fetchErrorByChannel,
@@ -153,6 +154,7 @@ export default function Errors() {
               data={rateTrend}
               xField="date"
               yField="error_rate"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Error Rate %' } }}
             />
           </ChartCard>
@@ -170,6 +172,7 @@ export default function Errors() {
               data={typeDist}
               angleField="count"
               colorField="status"
+              color={CHART_COLORS}
             />
           </ChartCard>
         </Col>
@@ -190,6 +193,7 @@ export default function Errors() {
               data={byModel}
               xField="model_id"
               yField="error_count"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Model', labelAutoHide: true }, y: { title: 'Error Count' } }}
             />
           </ChartCard>
@@ -207,6 +211,7 @@ export default function Errors() {
               data={byChannel}
               xField="channel_name"
               yField="error_count"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Error Count' } }}
             />
           </ChartCard>
@@ -229,6 +234,7 @@ export default function Errors() {
               xField="hour"
               yField="error_count"
               colorField="day"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Hour', labelAutoHide: true }, y: { title: 'Errors' } }}
             />
           </ChartCard>
@@ -296,6 +302,7 @@ export default function Errors() {
                   data={retryRate}
                   angleField="trace_count"
                   colorField="category"
+                  color={CHART_COLORS}
                 />
               </ChartCard>
             </Col>
@@ -312,6 +319,7 @@ export default function Errors() {
                   data={statusCodeDist}
                   angleField="count"
                   colorField="status"
+                  color={CHART_COLORS}
                 />
               </ChartCard>
             </Col>

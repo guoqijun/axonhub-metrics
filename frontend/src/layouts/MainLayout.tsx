@@ -75,15 +75,14 @@ export default function MainLayout() {
       <Layout>
         <Header
           style={{
-            background: '#fff',
             padding: '0 24px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid #f0f0f0',
+            borderBottom: '1px solid #e2e8f0',
           }}
         >
-          <Text>运营指标平台</Text>
+          <Text>CodeV运维分析平台</Text>
           <Flex align="center" gap={12}>
             <Text type="secondary">{username}</Text>
             <Button

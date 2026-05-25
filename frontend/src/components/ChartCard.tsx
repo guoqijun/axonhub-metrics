@@ -1,6 +1,7 @@
-import { Card, Spin, Alert, Button, Empty, Flex, Typography, Tooltip } from 'antd'
+import { Card, Spin, Alert, Button, Empty, Flex, Typography, Tooltip, theme } from 'antd'
 import { ReloadOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
+const { useToken } = theme
 const { Text } = Typography
 
 interface ChartCardProps {
@@ -19,6 +20,8 @@ export default function ChartCard({
   title, loading = false, error = null, empty = false,
   extra, onRetry, children, height = 350, description,
 }: ChartCardProps) {
+  const { token } = useToken()
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -59,11 +62,12 @@ export default function ChartCard({
     <Card
       title={<Text strong>{title}{description && (
         <Tooltip title={description}>
-          <InfoCircleOutlined style={{ marginLeft: 6, color: '#8c8c8c', fontSize: 13, cursor: 'help' }} />
+          <InfoCircleOutlined className="info-icon" style={{ color: token.colorTextTertiary }} />
         </Tooltip>
       )}</Text>}
       extra={extra}
       size="small"
+      className="hover-lift"
     >
       {renderContent()}
     </Card>

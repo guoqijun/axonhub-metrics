@@ -5,6 +5,7 @@ import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchAvgConversationRounds, fetchAvgTokensPerRequest,
   fetchSessionDuration, fetchRequestFrequencyBuckets,
@@ -185,6 +186,7 @@ export default function Usage() {
               data={sessionDur}
               angleField="count"
               colorField="bucket"
+              color={CHART_COLORS}
             />
           </ChartCard>
         </Col>
@@ -201,6 +203,7 @@ export default function Usage() {
               data={freqBuckets}
               xField="bucket"
               yField="user_count"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Requests/User' }, y: { title: 'Users' } }}
             />
           </ChartCard>
@@ -222,6 +225,7 @@ export default function Usage() {
               data={channelDaily}
               xField="channel_name"
               yField="daily_avg"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Daily Avg' } }}
             />
           </ChartCard>
@@ -239,6 +243,7 @@ export default function Usage() {
               data={perCapita}
               xField="date"
               yField="per_capita"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Req/User' } }}
             />
           </ChartCard>

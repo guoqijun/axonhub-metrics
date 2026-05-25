@@ -4,6 +4,7 @@ import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchChannelComparisonTable, fetchChannelLatencyComparison,
   fetchChannelLatencyHeatmap, fetchChannelHealthScores,
@@ -156,6 +157,7 @@ export default function Channels() {
               xField="channel"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Channel', labelAutoHide: true }, y: { title: 'Latency (ms)' } }}
             />
           </ChartCard>
@@ -178,6 +180,7 @@ export default function Channels() {
               xField="hour"
               yField="avg_latency"
               colorField="channel_name"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Hour' }, y: { title: 'Avg Latency (ms)' } }}
             />
           </ChartCard>
@@ -195,6 +198,7 @@ export default function Channels() {
               data={health}
               xField="channel_name"
               yField="health_score"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Health Score' } }}
             />
           </ChartCard>
@@ -217,6 +221,7 @@ export default function Channels() {
               xField="date"
               yField="error_rate"
               colorField="channel"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Error Rate %' } }}
             />
           </ChartCard>

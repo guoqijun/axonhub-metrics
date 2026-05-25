@@ -4,6 +4,7 @@ import { Column, Line, Pie } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchHeavyUsers, fetchTokenRanking, fetchRFMMatrix,
   fetchChannelEfficiency, fetchProjectContribution, fetchModelOutputRanking,
@@ -133,6 +134,7 @@ export default function Value() {
               data={rfm}
               angleField="user_count"
               colorField="quadrant"
+              color={CHART_COLORS}
               label={{ text: 'percentage', style: { fontSize: 10 } }}
             />
           </ChartCard>
@@ -157,6 +159,7 @@ export default function Value() {
               xField="model_id"
               yField="tokens"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Model', labelAutoHide: true } }}
             />
           </ChartCard>
@@ -174,6 +177,7 @@ export default function Value() {
               data={modelOutput}
               xField="model_id"
               yField="total_tokens"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Model', labelAutoHide: true }, y: { title: 'Total Tokens' } }}
             />
           </ChartCard>
@@ -194,6 +198,7 @@ export default function Value() {
               data={channelEff}
               xField="channel_name"
               yField="tokens_per_dollar"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Tokens/$' } }}
             />
           </ChartCard>
@@ -212,6 +217,7 @@ export default function Value() {
               xField="date"
               yField="value"
               colorField="project"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Requests' } }}
             />
           </ChartCard>

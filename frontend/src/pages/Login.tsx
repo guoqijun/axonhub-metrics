@@ -17,14 +17,14 @@ export default function Login() {
 
   return (
     <Flex
-      style={{ minHeight: '100vh', background: '#f0f2f5' }}
+      style={{ minHeight: '100vh' }}
       align="center"
       justify="center"
     >
       <Card style={{ width: 400 }}>
         <Flex vertical align="center" gap={8} style={{ marginBottom: 24 }}>
           <Title level={3} style={{ margin: 0 }}>AxonHub Metrics</Title>
-          <Text type="secondary">运营指标平台</Text>
+          <Text type="secondary">CodeV运维分析平台</Text>
         </Flex>
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item label="Username" required>

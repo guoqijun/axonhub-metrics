@@ -1,5 +1,7 @@
-import { Card, Statistic, Flex, Tooltip } from 'antd'
+import { Card, Statistic, Flex, Tooltip, theme } from 'antd'
 import { ArrowUpOutlined, ArrowDownOutlined, InfoCircleOutlined } from '@ant-design/icons'
+
+const { useToken } = theme
 
 interface KPICardProps {
   title: string
@@ -16,15 +18,17 @@ interface KPICardProps {
 export default function KPICard({
   title, value, prefix, suffix, precision = 2, trend, trendValue, loading, description,
 }: KPICardProps) {
+  const { token } = useToken()
+
   return (
-    <Card loading={loading} hoverable>
+    <Card loading={loading} hoverable className="hover-lift" style={{ height: '100%' }} styles={{ body: { display: 'flex', flexDirection: 'column', justifyContent: 'center' } }}>
       <Statistic
         title={
           <span>
             {title}
             {description && (
               <Tooltip title={description}>
-                <InfoCircleOutlined style={{ marginLeft: 6, color: '#8c8c8c', fontSize: 13, cursor: 'help' }} />
+                <InfoCircleOutlined className="info-icon" style={{ color: token.colorTextTertiary }} />
               </Tooltip>
             )}
           </span>
@@ -37,11 +41,11 @@ export default function KPICard({
       {trend && (
         <Flex align="center" gap={4} style={{ marginTop: 8 }}>
           {trend === 'up' ? (
-            <ArrowUpOutlined style={{ color: '#52c41a' }} />
+            <ArrowUpOutlined style={{ color: token.colorSuccess }} />
           ) : (
-            <ArrowDownOutlined style={{ color: '#ff4d4f' }} />
+            <ArrowDownOutlined style={{ color: token.colorError }} />
           )}
-          <span style={{ fontSize: 12, color: trend === 'up' ? '#52c41a' : '#ff4d4f' }}>
+          <span style={{ fontSize: 12, color: trend === 'up' ? token.colorSuccess : token.colorError }}>
             {trendValue}
           </span>
         </Flex>

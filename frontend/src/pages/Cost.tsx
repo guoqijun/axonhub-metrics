@@ -4,6 +4,7 @@ import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchTokenFeeTrend, fetchCostModelDistribution, fetchChannelComparison,
   fetchCostUserTop, fetchProjectDailyCost, fetchCacheHitRate,
@@ -138,6 +139,7 @@ export default function Cost() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
             />
           </ChartCard>
         </Col>
@@ -154,6 +156,7 @@ export default function Cost() {
               data={modelDist}
               xField="model_id"
               yField="total_cost"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Model', labelAutoHide: true }, y: { title: 'Cost ($)' } }}
             />
           </ChartCard>
@@ -175,6 +178,7 @@ export default function Cost() {
               data={channelComp}
               xField="channel_name"
               yField="total_cost"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Cost ($)' } }}
             />
           </ChartCard>
@@ -222,6 +226,7 @@ export default function Cost() {
               xField="date"
               yField="value"
               colorField="project"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Cost ($)' } }}
             />
           </ChartCard>
@@ -239,6 +244,7 @@ export default function Cost() {
               data={cacheHit}
               xField="date"
               yField="cache_hit_pct"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Cache Hit %' } }}
             />
           </ChartCard>
@@ -260,6 +266,7 @@ export default function Cost() {
               data={reasoning}
               xField="date"
               yField="reasoning_pct"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Reasoning %' } }}
             />
           </ChartCard>
@@ -278,6 +285,7 @@ export default function Cost() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Cost ($)' } }}
             />
           </ChartCard>

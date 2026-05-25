@@ -69,7 +69,7 @@ export default function FilterBar() {
             return (
               <span style={{ marginRight: 4 }}>
                 {label}
-                {closable && <button onClick={onClose} style={{ marginLeft: 4, border: 'none', cursor: 'pointer' }}>x</button>}
+                {closable && <button className="filter-tag-close" onClick={onClose}>x</button>}
               </span>
             )
           }}

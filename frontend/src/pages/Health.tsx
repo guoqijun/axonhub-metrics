@@ -4,6 +4,7 @@ import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchLatencyTrend, fetchChannelHealthRanking, fetchSlowRequests,
   fetchQuotaAlertList, fetchProbeTrend, fetchCacheHitTrend,
@@ -132,6 +133,7 @@ export default function Health() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Latency (ms)' } }}
             />
           </ChartCard>
@@ -149,6 +151,7 @@ export default function Health() {
               data={healthRank}
               xField="channel_name"
               yField="health_score"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Health Score' } }}
             />
           </ChartCard>
@@ -222,6 +225,7 @@ export default function Health() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Value' } }}
             />
           </ChartCard>
@@ -239,6 +243,7 @@ export default function Health() {
               data={cacheHit}
               xField="date"
               yField="cache_hit_pct"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Cache Hit %' } }}
             />
           </ChartCard>
@@ -260,6 +265,7 @@ export default function Health() {
               data={avail}
               xField="date"
               yField="availability_pct"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'Availability %' } }}
             />
           </ChartCard>

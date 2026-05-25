@@ -4,6 +4,7 @@ import { Column, Line, Pie } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchMomYoy, fetchGrowthForecast, fetchUserGrowthCurve,
   fetchModelGrowthRate, fetchChannelMarketShare, fetchProjectGrowthRanking,
@@ -139,6 +140,7 @@ export default function Growth() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Requests' } }}
             />
           </ChartCard>
@@ -164,6 +166,7 @@ export default function Growth() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Date' }, y: { title: 'Users' } }}
             />
           </ChartCard>
@@ -206,6 +209,7 @@ export default function Growth() {
               data={latestShare}
               angleField="share_pct"
               colorField="channel_name"
+              color={CHART_COLORS}
             />
           </ChartCard>
         </Col>
@@ -222,6 +226,7 @@ export default function Growth() {
               data={projectRank}
               xField="project_name"
               yField="request_count"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Project' }, y: { title: 'Requests' } }}
             />
           </ChartCard>

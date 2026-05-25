@@ -5,6 +5,7 @@ import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
+import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
   fetchDAUMauTrend, fetchUsageRatio, fetchNewUserTrend,
   fetchChannelActiveUsers, fetchModelUserCount,
@@ -223,6 +224,7 @@ export default function Adoption() {
               xField="date"
               yField="value"
               colorField="type"
+              color={CHART_COLORS}
             />
           </ChartCard>
         </Col>
@@ -239,6 +241,7 @@ export default function Adoption() {
               data={newUser}
               xField="date"
               yField="value"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Date' }, y: { title: 'New Users' } }}
             />
           </ChartCard>
@@ -260,6 +263,7 @@ export default function Adoption() {
               data={channelUsers}
               xField="channel_name"
               yField="active_users"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Channel' }, y: { title: 'Active Users' } }}
             />
           </ChartCard>
@@ -277,6 +281,7 @@ export default function Adoption() {
               data={modelUsers}
               xField="model_id"
               yField="user_count"
+              color={CHART_PRIMARY}
               axis={{ x: { title: 'Model', labelAutoHide: true }, y: { title: 'Users' } }}
             />
           </ChartCard>
@@ -299,6 +304,7 @@ export default function Adoption() {
               xField="hour"
               yField="user_count"
               colorField="day_label"
+              color={CHART_COLORS}
               axis={{ x: { title: 'Hour' }, y: { title: 'Active Users' } }}
             />
           </ChartCard>
