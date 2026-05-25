@@ -8,7 +8,7 @@ class FilterParams(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     granularity: Literal["day", "week", "month"] = "day"
-    user_ids: Optional[list[int]] = None
+    user_ids: Optional[list[str]] = None
     channel_ids: Optional[list[int]] = None
     model_ids: Optional[list[str]] = None
     project_id: Optional[int] = None
@@ -38,9 +38,9 @@ def apply_filters(params: FilterParams, table_alias: str = "ul") -> tuple[str, d
         conditions.append(f"DATE({table_alias}.created_at) <= :end_date")
         bind["end_date"] = params.end_date
     if params.user_ids:
-        # user_id is on api_keys table, usage_logs has api_key_id
+        # employee_id is on api_keys table, filter usage_logs via api_key_id
         placeholders = ", ".join([f":uid_{i}" for i in range(len(params.user_ids))])
-        conditions.append(f"{table_alias}.api_key_id IN (SELECT id FROM api_keys WHERE user_id IN ({placeholders}))")
+        conditions.append(f"{table_alias}.api_key_id IN (SELECT id FROM api_keys WHERE employee_id IN ({placeholders}))")
         for i, uid in enumerate(params.user_ids):
             bind[f"uid_{i}"] = uid
     if params.channel_ids:

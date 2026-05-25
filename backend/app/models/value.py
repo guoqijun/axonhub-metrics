@@ -6,6 +6,10 @@ class HeavyUser(BaseModel):
     user_id: Optional[int] = None
     email: Optional[str] = None
     name: str = ""
+    employee_id: Optional[str] = None
+    employee_name: Optional[str] = None
+    employee_org_id: Optional[str] = None
+    employee_org_name: Optional[str] = None
     request_count: int = 0
     total_tokens: int = 0
     total_cost: float = 0.0

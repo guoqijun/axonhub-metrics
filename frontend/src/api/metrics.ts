@@ -96,6 +96,12 @@ export interface ModelUserCount {
   user_count: number
 }
 
+export interface UserPenetration {
+  heavy_users: number
+  total_users: number
+  penetration_rate: number
+}
+
 export interface ActivityHeatmapPoint {
   day_of_week: number
   hour: number
@@ -131,6 +137,11 @@ export async function fetchChannelActiveUsers(filters: FilterState): Promise<Cha
 
 export async function fetchModelUserCount(filters: FilterState): Promise<ModelUserCount[]> {
   const { data } = await client.get('/adoption/model_user_count', { params: toParams(filters) })
+  return data
+}
+
+export async function fetchUserPenetration(filters: FilterState): Promise<UserPenetration> {
+  const { data } = await client.get('/adoption/user_penetration', { params: toParams(filters) })
   return data
 }
 
@@ -238,6 +249,10 @@ export interface HeavyUser {
   user_id: number | null
   email: string | null
   name: string
+  employee_id: string | null
+  employee_name: string | null
+  employee_org_id: string | null
+  employee_org_name: string | null
   request_count: number
   total_tokens: number
   total_cost: number
@@ -338,6 +353,10 @@ export interface CostTopUser {
   user_id: number | null
   email: string | null
   name: string
+  employee_id: string | null
+  employee_name: string | null
+  employee_org_id: string | null
+  employee_org_name: string | null
   total_cost: number
   request_count: number
   total_tokens: number
@@ -449,6 +468,10 @@ export interface TopFailingUser {
   user_id: number | null
   email: string | null
   name: string
+  employee_id: string | null
+  employee_name: string | null
+  employee_org_id: string | null
+  employee_org_name: string | null
   total_count: number
   error_count: number
   error_rate: number

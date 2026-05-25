@@ -238,9 +238,10 @@ export default function Errors() {
           >
             <MetricTable
               dataSource={topUsers}
-              rowKey="user_id"
+              rowKey="employee_id"
               columns={[
-                { key: 'name', title: '用户', render: (r: TopFailingUser) => r.name || r.email || `#${r.user_id}` },
+                { key: 'name', title: '用户', render: (r: TopFailingUser) => r.employee_name || r.name || r.employee_id || '-' },
+                { key: 'employee_org_name', title: '组织', render: (r: TopFailingUser) => r.employee_org_name || '-' },
                 { key: 'request_count', title: '总请求数' },
                 { key: 'error_count', title: '失败数' },
                 { key: 'error_rate', title: '失败率', render: (r: TopFailingUser) => `${r.error_rate}%` },

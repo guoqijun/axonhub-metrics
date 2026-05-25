@@ -107,9 +107,10 @@ export default function Value() {
           >
             <MetricTable
               dataSource={heavyUsers}
-              rowKey="user_id"
+              rowKey="employee_id"
               columns={[
-                { key: 'name', title: '用户', render: (r: HeavyUser) => r.name || r.email || `#${r.user_id}` },
+                { key: 'name', title: '用户', render: (r: HeavyUser) => r.employee_name || r.name || r.employee_id || '-' },
+                { key: 'employee_org_name', title: '组织', render: (r: HeavyUser) => r.employee_org_name || '-' },
                 { key: 'request_count', title: '请求量' },
                 { key: 'total_tokens', title: 'Token 数', render: (r: HeavyUser) => r.total_tokens.toLocaleString() },
                 { key: 'total_cost', title: '费用', render: (r: HeavyUser) => `$${r.total_cost.toFixed(4)}` },

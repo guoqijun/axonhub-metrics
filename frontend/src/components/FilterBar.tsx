@@ -8,6 +8,9 @@ const { RangePicker } = DatePicker
 interface Option {
   id: number | string
   name?: string
+  employee_id?: string | null
+  employee_name?: string | null
+  employee_org_name?: string | null
 }
 
 export default function FilterBar() {
@@ -55,10 +58,12 @@ export default function FilterBar() {
           style={{ minWidth: 150 }}
           allowClear
           showSearch
-          options={users.map((u) => ({
-            value: u.id as number,
-            label: u.name ? `${u.name} (${u.id})` : `User #${u.id}`,
-          }))}
+          options={users.map((u) => {
+            const label = u.employee_name
+              ? `${u.employee_name}${u.employee_org_name ? ` (${u.employee_org_name})` : ''}`
+              : u.employee_id || `User #${u.id}`
+            return { value: u.id as string, label }
+          })}
           tagRender={(props) => {
             const { label, closable, onClose } = props
             return (

@@ -129,24 +129,28 @@ class ErrorsService:
         where, bind = apply_filters(params)
 
         rows = await self.db.fetch_all(f"""
-            SELECT ak.user_id, u.email, u.first_name, u.last_name,
+            SELECT ak.employee_id,
+                   ANY_VALUE(ak.employee_name) as employee_name,
+                   ANY_VALUE(ak.employee_org_id) as employee_org_id,
+                   ANY_VALUE(ak.employee_org_name) as employee_org_name,
                    COUNT(*) as total_count,
                    SUM(CASE WHEN r.status IN ('failed', 'canceled') THEN 1 ELSE 0 END) as error_count
             FROM usage_logs ul
             LEFT JOIN requests r ON ul.request_id = r.id
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
-            LEFT JOIN users u ON ak.user_id = u.id
             WHERE {where}
-            GROUP BY ak.user_id
+            GROUP BY ak.employee_id
             ORDER BY error_count DESC
             LIMIT 20
         """, bind)
 
         return [
             TopFailingUser(
-                user_id=r["user_id"],
-                email=r["email"],
-                name=(r["first_name"] or "") + " " + (r["last_name"] or ""),
+                employee_id=r["employee_id"],
+                employee_name=r["employee_name"],
+                employee_org_id=r["employee_org_id"],
+                employee_org_name=r["employee_org_name"],
+                name=r["employee_name"] or "",
                 total_count=r["total_count"],
                 error_count=r["error_count"],
                 error_rate=round(r["error_count"] / r["total_count"] * 100, 2) if r["total_count"] > 0 else 0,

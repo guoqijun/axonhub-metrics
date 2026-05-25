@@ -45,3 +45,8 @@ async def get_activity_heatmap(params: FilterParams = Depends(), service: Adopti
 @router.get("/project_ranking")
 async def get_project_ranking(params: FilterParams = Depends(), service: AdoptionService = Depends(_get_service)):
     return await service.get_project_ranking(params)
+
+
+@router.get("/user_penetration")
+async def get_user_penetration(params: FilterParams = Depends(), service: AdoptionService = Depends(_get_service)):
+    return await service.get_user_penetration(params)

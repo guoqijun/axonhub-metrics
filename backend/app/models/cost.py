@@ -30,6 +30,10 @@ class CostTopUser(BaseModel):
     user_id: Optional[int] = None
     email: Optional[str] = None
     name: str = ""
+    employee_id: Optional[str] = None
+    employee_name: Optional[str] = None
+    employee_org_id: Optional[str] = None
+    employee_org_name: Optional[str] = None
     total_cost: float = 0.0
     request_count: int = 0
     total_tokens: int = 0

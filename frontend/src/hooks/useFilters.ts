@@ -4,13 +4,13 @@ import dayjs from 'dayjs'
 export interface FilterState {
   dateRange: [dayjs.Dayjs, dayjs.Dayjs]
   granularity: 'day' | 'week' | 'month'
-  userIds: number[]
+  userIds: string[]
   channelIds: number[]
   modelIds: string[]
   projectId: number | null
   setDateRange: (range: [dayjs.Dayjs, dayjs.Dayjs]) => void
   setGranularity: (g: 'day' | 'week' | 'month') => void
-  setUserIds: (ids: number[]) => void
+  setUserIds: (ids: string[]) => void
   setChannelIds: (ids: number[]) => void
   setModelIds: (ids: string[]) => void
   setProjectId: (id: number | null) => void

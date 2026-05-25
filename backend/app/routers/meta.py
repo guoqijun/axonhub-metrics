@@ -9,12 +9,23 @@ router = APIRouter()
 @router.get("/users")
 async def get_users(db: Database = Depends(get_db)):
     rows = await db.fetch_all("""
-        SELECT DISTINCT user_id
-        FROM api_keys
-        WHERE user_id IS NOT NULL
-        ORDER BY user_id
+        SELECT DISTINCT ak.employee_id,
+               ak.employee_name,
+               ak.employee_org_id, ak.employee_org_name
+        FROM api_keys ak
+        WHERE ak.employee_id IS NOT NULL
+        ORDER BY ak.employee_id
     """)
-    return [{"id": r["user_id"]} for r in rows]
+    return [
+        {
+            "id": r["employee_id"],
+            "employee_id": r["employee_id"],
+            "employee_name": r["employee_name"],
+            "employee_org_id": r["employee_org_id"],
+            "employee_org_name": r["employee_org_name"],
+        }
+        for r in rows
+    ]
 
 
 @router.get("/channels")

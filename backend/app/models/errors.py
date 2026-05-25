@@ -40,6 +40,10 @@ class TopFailingUser(BaseModel):
     user_id: Optional[int] = None
     email: Optional[str] = None
     name: str = ""
+    employee_id: Optional[str] = None
+    employee_name: Optional[str] = None
+    employee_org_id: Optional[str] = None
+    employee_org_name: Optional[str] = None
     total_count: int = 0
     error_count: int = 0
     error_rate: float = 0.0

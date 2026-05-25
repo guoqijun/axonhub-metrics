@@ -23,7 +23,7 @@ class OverviewService:
             today_parts.append(f"ul.model_id IN ({mids})")
         if params.user_ids:
             uid_placeholders = ", ".join([f":tuid_{i}" for i in range(len(params.user_ids))])
-            today_parts.append(f"ul.api_key_id IN (SELECT id FROM api_keys WHERE user_id IN ({uid_placeholders}))")
+            today_parts.append(f"ul.api_key_id IN (SELECT id FROM api_keys WHERE employee_id IN ({uid_placeholders}))")
             for i, uid in enumerate(params.user_ids):
                 today_bind[f"tuid_{i}"] = uid
 
@@ -35,7 +35,7 @@ class OverviewService:
         today_row = await self.db.fetch_one(f"""
             SELECT
                 COUNT(*) as today_requests,
-                COUNT(DISTINCT ak.user_id) as dau,
+                COUNT(DISTINCT ak.employee_id) as dau,
                 COALESCE(SUM(ul.total_cost), 0) as today_cost
             FROM usage_logs ul
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id

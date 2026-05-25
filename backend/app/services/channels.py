@@ -18,7 +18,7 @@ class ChannelsService:
         rows = await self.db.fetch_all(f"""
             SELECT ul.channel_id, c.name as channel_name, c.type as channel_type,
                    COUNT(*) as request_count,
-                   COUNT(DISTINCT ak.user_id) as user_count,
+                   COUNT(DISTINCT ak.employee_id) as user_count,
                    COALESCE(AVG(r.metrics_latency_ms), 0) as avg_latency,
                    COALESCE(SUM(ul.total_cost), 0) as total_cost,
                    COALESCE(SUM(ul.total_tokens), 0) as total_tokens,

@@ -38,3 +38,9 @@ class ProjectRanking(BaseModel):
     project_name: Optional[str] = None
     request_count: int = 0
     user_count: int = 0
+
+
+class UserPenetration(BaseModel):
+    heavy_users: int = 0
+    total_users: int = 0
+    penetration_rate: float = 0.0

@@ -93,24 +93,28 @@ class CostService:
         where, bind = apply_filters(params)
 
         rows = await self.db.fetch_all(f"""
-            SELECT ak.user_id, u.email, u.first_name, u.last_name,
+            SELECT ak.employee_id,
+                   ANY_VALUE(ak.employee_name) as employee_name,
+                   ANY_VALUE(ak.employee_org_id) as employee_org_id,
+                   ANY_VALUE(ak.employee_org_name) as employee_org_name,
                    COALESCE(SUM(ul.total_cost), 0) as total_cost,
                    COUNT(*) as request_count,
                    COALESCE(SUM(ul.total_tokens), 0) as total_tokens
             FROM usage_logs ul
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
-            LEFT JOIN users u ON ak.user_id = u.id
             WHERE {where}
-            GROUP BY ak.user_id
+            GROUP BY ak.employee_id
             ORDER BY total_cost DESC
             LIMIT 20
         """, bind)
 
         return [
             CostTopUser(
-                user_id=r["user_id"],
-                email=r["email"],
-                name=(r["first_name"] or "") + " " + (r["last_name"] or ""),
+                employee_id=r["employee_id"],
+                employee_name=r["employee_name"],
+                employee_org_id=r["employee_org_id"],
+                employee_org_name=r["employee_org_name"],
+                name=r["employee_name"] or "",
                 total_cost=float(r["total_cost"] or 0),
                 request_count=r["request_count"],
                 total_tokens=r["total_tokens"],

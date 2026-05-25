@@ -19,7 +19,7 @@ class GrowthService:
         rows = await self.db.fetch_all(f"""
             SELECT DATE_FORMAT(ul.created_at, '%Y-%m') as month,
                    COUNT(*) as request_count,
-                   COUNT(DISTINCT ak.user_id) as user_count,
+                   COUNT(DISTINCT ak.employee_id) as user_count,
                    COALESCE(SUM(ul.total_tokens), 0) as total_tokens,
                    COALESCE(SUM(ul.total_cost), 0) as total_cost
             FROM usage_logs ul
@@ -69,7 +69,7 @@ class GrowthService:
         rows = await self.db.fetch_all(f"""
             SELECT {trunc} as date,
                    COUNT(*) as request_count,
-                   COUNT(DISTINCT ak.user_id) as user_count
+                   COUNT(DISTINCT ak.employee_id) as user_count
             FROM usage_logs ul
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
             WHERE {where}
@@ -114,7 +114,7 @@ class GrowthService:
 
         rows = await self.db.fetch_all(f"""
             SELECT DATE(ul.created_at) as date,
-                   COUNT(DISTINCT ak.user_id) as new_users
+                   COUNT(DISTINCT ak.employee_id) as new_users
             FROM usage_logs ul
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
             WHERE {where}
@@ -190,7 +190,7 @@ class GrowthService:
         rows = await self.db.fetch_all(f"""
             SELECT ul.project_id, p.name as project_name,
                    COUNT(*) as request_count,
-                   COUNT(DISTINCT ak.user_id) as user_count
+                   COUNT(DISTINCT ak.employee_id) as user_count
             FROM usage_logs ul
             LEFT JOIN projects p ON ul.project_id = p.id
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id

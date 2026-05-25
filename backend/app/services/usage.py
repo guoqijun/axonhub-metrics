@@ -93,11 +93,11 @@ class UsageService:
                 END as bucket,
                 COUNT(*) as user_count
             FROM (
-                SELECT ak.user_id, COUNT(*) as req_count
+                SELECT ak.employee_id, COUNT(*) as req_count
                 FROM usage_logs ul
                 LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
                 WHERE {where}
-                GROUP BY ak.user_id
+                GROUP BY ak.employee_id
             ) t
             GROUP BY bucket
             ORDER BY bucket
@@ -151,7 +151,7 @@ class UsageService:
 
     async def get_user_retention_cohort(self, params: FilterParams) -> List[RetentionCohortPoint]:
         # Build conditions for usage_logs scope
-        ul_conditions = ["1=1"]
+        ul_conditions = ["ak.employee_id IS NOT NULL"]
         bind = {}
         if params.start_date:
             ul_conditions.append("DATE(ul.created_at) >= :start_date")
@@ -174,15 +174,19 @@ class UsageService:
 
         rows = await self.db.fetch_all(f"""
             SELECT
-                DATE_FORMAT(u.created_at, '%Y-%m') as cohort,
+                DATE_FORMAT(first_seen, '%Y-%m') as cohort,
                 DATE_FORMAT(ul.created_at, '%Y-%m') as active_month,
-                COUNT(DISTINCT ak.user_id) as active_users
-            FROM users u
-            INNER JOIN api_keys ak ON u.id = ak.user_id
-            INNER JOIN usage_logs ul ON ak.id = ul.api_key_id
-            WHERE u.deleted_at = 0
-              AND u.status = 'activated'
-              AND {ul_where}
+                COUNT(DISTINCT ak.employee_id) as active_users
+            FROM usage_logs ul
+            LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
+            LEFT JOIN (
+                SELECT ak2.employee_id, MIN(ul2.created_at) as first_seen
+                FROM usage_logs ul2
+                LEFT JOIN api_keys ak2 ON ul2.api_key_id = ak2.id
+                WHERE ak2.employee_id IS NOT NULL
+                GROUP BY ak2.employee_id
+            ) first ON ak.employee_id = first.employee_id
+            WHERE {ul_where}
             GROUP BY cohort, active_month
             ORDER BY cohort, active_month
         """, bind)
@@ -203,7 +207,7 @@ class UsageService:
         rows = await self.db.fetch_all(f"""
             SELECT {trunc} as date,
                    COUNT(*) as total_requests,
-                   COUNT(DISTINCT ak.user_id) as active_users
+                   COUNT(DISTINCT ak.employee_id) as active_users
             FROM usage_logs ul
             LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
             WHERE {where}

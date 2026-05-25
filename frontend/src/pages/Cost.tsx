@@ -186,9 +186,10 @@ export default function Cost() {
           >
             <MetricTable
               dataSource={userTop}
-              rowKey="user_id"
+              rowKey="employee_id"
               columns={[
-                { key: 'name', title: '用户', render: (r: CostTopUser) => r.name || r.email || `#${r.user_id}` },
+                { key: 'name', title: '用户', render: (r: CostTopUser) => r.employee_name || r.name || r.employee_id || '-' },
+                { key: 'employee_org_name', title: '组织', render: (r: CostTopUser) => r.employee_org_name || '-' },
                 { key: 'total_cost', title: '总费用', render: (r: CostTopUser) => `$${r.total_cost.toFixed(4)}` },
                 { key: 'request_count', title: '请求数' },
                 { key: 'total_tokens', title: 'Token 数', render: (r: CostTopUser) => r.total_tokens.toLocaleString() },

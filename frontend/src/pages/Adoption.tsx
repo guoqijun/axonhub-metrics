@@ -8,9 +8,10 @@ import { useFilterStore } from '../hooks/useFilters'
 import {
   fetchDAUMauTrend, fetchUsageRatio, fetchNewUserTrend,
   fetchChannelActiveUsers, fetchModelUserCount,
-  fetchActivityHeatmap, fetchProjectRanking,
+  fetchActivityHeatmap, fetchProjectRanking, fetchUserPenetration,
   type DAUMauPoint, type UsageRatio, type ProjectRanking,
   type ChannelActiveUsers, type ModelUserCount, type ActivityHeatmapPoint,
+  type UserPenetration,
 } from '../api/metrics'
 import type { TrendPoint } from '../api/metrics'
 
@@ -45,6 +46,9 @@ export default function Adoption() {
   const [projects, setProjects] = useState<ProjectRanking[]>([])
   const [projectsLoading, setProjectsLoading] = useState(false)
   const [projectsError, setProjectsError] = useState<string | null>(null)
+
+  const [penetration, setPenetration] = useState<UserPenetration | null>(null)
+  const [penetrationLoading, setPenetrationLoading] = useState(false)
 
   const loadUsageRatio = useCallback(async () => {
     setUsageRatioLoading(true)
@@ -103,6 +107,15 @@ export default function Adoption() {
     finally { setProjectsLoading(false) }
   }, [filters])
 
+  const loadPenetration = useCallback(async () => {
+    setPenetrationLoading(true)
+    try {
+      const data = await fetchUserPenetration(filters)
+      setPenetration(data)
+    } catch { /* silent */ }
+    finally { setPenetrationLoading(false) }
+  }, [filters])
+
   useEffect(() => { loadUsageRatio() }, [loadUsageRatio])
   useEffect(() => { loadDauMau() }, [loadDauMau])
   useEffect(() => { loadNewUser() }, [loadNewUser])
@@ -110,6 +123,7 @@ export default function Adoption() {
   useEffect(() => { loadModelUsers() }, [loadModelUsers])
   useEffect(() => { loadHeatmap() }, [loadHeatmap])
   useEffect(() => { loadProjects() }, [loadProjects])
+  useEffect(() => { loadPenetration() }, [loadPenetration])
 
   // Transform heatmap for chart: merge same hour across days
   const heatmapData = heatmap.map(p => ({
@@ -117,11 +131,32 @@ export default function Adoption() {
     day_label: DAY_NAMES[p.day_of_week] || `Day${p.day_of_week}`,
   }))
 
+  // Latest DAU/MAU from trend data
+  const latest = dauMau.length > 0 ? dauMau[dauMau.length - 1] : null
+
   return (
     <Flex vertical gap={16}>
-      {/* KPI Row */}
+      {/* KPI Row: 日活/月活 + 推广覆盖指标 */}
       <Row gutter={[16, 16]}>
-        <Col xs={24} sm={8}>
+        <Col xs={12} sm={8}>
+          <KPICard
+            title="日活跃用户 (DAU)"
+            value={latest?.dau ?? 0}
+            suffix="users"
+            precision={0}
+            loading={dauMauLoading}
+          />
+        </Col>
+        <Col xs={12} sm={8}>
+          <KPICard
+            title="月活跃用户 (MAU)"
+            value={latest?.mau ?? 0}
+            suffix="users"
+            precision={0}
+            loading={dauMauLoading}
+          />
+        </Col>
+        <Col xs={12} sm={8}>
           <KPICard
             title="活跃用户"
             value={usageRatio?.active_users ?? 0}
@@ -130,7 +165,7 @@ export default function Adoption() {
             loading={usageRatioLoading}
           />
         </Col>
-        <Col xs={24} sm={8}>
+        <Col xs={12} sm={8}>
           <KPICard
             title="总注册用户"
             value={usageRatio?.total_users ?? 0}
@@ -139,7 +174,7 @@ export default function Adoption() {
             loading={usageRatioLoading}
           />
         </Col>
-        <Col xs={24} sm={8}>
+        <Col xs={12} sm={8}>
           <KPICard
             title="使用比例"
             value={usageRatio ? (usageRatio.ratio * 100) : 0}
@@ -148,6 +183,17 @@ export default function Adoption() {
             loading={usageRatioLoading}
             trend={usageRatio && usageRatio.ratio > 0.5 ? 'up' : usageRatio ? 'down' : null}
             trendValue={usageRatio ? `${(usageRatio.ratio * 100).toFixed(1)}%` : undefined}
+          />
+        </Col>
+        <Col xs={12} sm={8}>
+          <KPICard
+            title="用户渗透率"
+            value={penetration ? (penetration.penetration_rate * 100) : 0}
+            suffix="%"
+            precision={1}
+            loading={penetrationLoading}
+            trend={penetration && penetration.penetration_rate > 0.3 ? 'up' : penetration ? 'down' : null}
+            trendValue={penetration ? `${(penetration.penetration_rate * 100).toFixed(1)}%` : undefined}
           />
         </Col>
       </Row>
