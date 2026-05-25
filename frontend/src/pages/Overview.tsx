@@ -114,6 +114,7 @@ export default function Overview() {
             suffix="req"
             precision={0}
             loading={kpiLoading}
+            description="当日平台收到的总 API 请求次数，反映平台当前的使用活跃度"
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -123,6 +124,7 @@ export default function Overview() {
             suffix="users"
             precision={0}
             loading={kpiLoading}
+            description="当日至少发起一次 API 请求的唯一用户数（按 employee_id 去重），衡量用户覆盖广度"
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -134,6 +136,7 @@ export default function Overview() {
             trend={kpi && kpi.success_rate > 0.95 ? 'up' : kpi ? 'down' : null}
             trendValue={kpi ? `${(kpi.success_rate * 100).toFixed(1)}%` : undefined}
             loading={kpiLoading}
+            description="近 30 天请求完成率（非 failed/canceled），反映平台整体稳定性"
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -143,6 +146,7 @@ export default function Overview() {
             prefix="$"
             precision={4}
             loading={kpiLoading}
+            description="当日所有请求的总费用，基于 Token 消耗 × 模型单价计算，反映平台运营成本"
           />
         </Col>
       </Row>
@@ -156,6 +160,7 @@ export default function Overview() {
             error={requestsTrendError}
             empty={requestsTrend.length === 0 && !requestsTrendLoading && !requestsTrendError}
             onRetry={loadRequestsTrend}
+            description="每日请求量的时间序列变化，用于观察使用量的增长趋势和周期性波动"
           >
             <Column
               data={requestsTrend}
@@ -172,6 +177,7 @@ export default function Overview() {
             error={tokenTrendError}
             empty={tokenTrend.length === 0 && !tokenTrendLoading && !tokenTrendError}
             onRetry={loadTokenTrend}
+            description="每日 Prompt 和 Completion Token 消耗量变化，区分输入和输出 Token，了解模型算力消耗分布"
           >
             <Line
               data={tokenTrend.flatMap((d) => [
@@ -195,6 +201,7 @@ export default function Overview() {
             error={modelDistError}
             empty={modelDist.length === 0 && !modelDistLoading && !modelDistError}
             onRetry={loadModelDist}
+            description="各模型请求量的占比分布，反映用户对不同模型的选择偏好"
           >
             <Pie
               data={modelDist}
@@ -212,6 +219,7 @@ export default function Overview() {
             error={errorTrendError}
             empty={errorTrend.length === 0 && !errorTrendLoading && !errorTrendError}
             onRetry={loadErrorTrend}
+            description="每日请求错误率的趋势变化，用于监控平台稳定性，及时发现异常波动"
           >
             <Line
               data={errorTrend}

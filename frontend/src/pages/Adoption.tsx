@@ -145,6 +145,7 @@ export default function Adoption() {
             suffix="users"
             precision={0}
             loading={dauMauLoading}
+            description="当日至少发起一次 API 请求的唯一用户数，反映平台日活规模"
           />
         </Col>
         <Col xs={12} sm={8}>
@@ -154,6 +155,7 @@ export default function Adoption() {
             suffix="users"
             precision={0}
             loading={dauMauLoading}
+            description="近 30 天至少发起一次 API 请求的唯一用户数，反映平台月活规模"
           />
         </Col>
         <Col xs={12} sm={8}>
@@ -163,6 +165,7 @@ export default function Adoption() {
             suffix="users"
             precision={0}
             loading={usageRatioLoading}
+            description="筛选时间段内有过至少一次请求的去重用户数"
           />
         </Col>
         <Col xs={12} sm={8}>
@@ -172,6 +175,7 @@ export default function Adoption() {
             suffix="users"
             precision={0}
             loading={usageRatioLoading}
+            description="平台所有注册过的去重用户总数（基于 API Key 中的员工 ID）"
           />
         </Col>
         <Col xs={12} sm={8}>
@@ -183,6 +187,7 @@ export default function Adoption() {
             loading={usageRatioLoading}
             trend={usageRatio && usageRatio.ratio > 0.5 ? 'up' : usageRatio ? 'down' : null}
             trendValue={usageRatio ? `${(usageRatio.ratio * 100).toFixed(1)}%` : undefined}
+            description="活跃用户 ÷ 总注册用户 × 100%，反映时间段内使用平台的用户占总注册用户的比例"
           />
         </Col>
         <Col xs={12} sm={8}>
@@ -194,6 +199,7 @@ export default function Adoption() {
             loading={penetrationLoading}
             trend={penetration && penetration.penetration_rate > 0.3 ? 'up' : penetration ? 'down' : null}
             trendValue={penetration ? `${(penetration.penetration_rate * 100).toFixed(1)}%` : undefined}
+            description="使用天数 > 5 天的重度用户 ÷ 总注册用户 × 100%，使用天数多表示用户已形成习惯，渗透率越高说明产品粘性越好"
           />
         </Col>
       </Row>
@@ -207,6 +213,7 @@ export default function Adoption() {
             error={dauMauError}
             empty={dauMau.length === 0 && !dauMauLoading && !dauMauError}
             onRetry={loadDauMau}
+            description="日活和月活的时间序列对比，评估用户粘性。DAU/MAU 比值越高说明用户使用频率越高"
           >
             <Line
               data={dauMau.flatMap(d => [
@@ -226,6 +233,7 @@ export default function Adoption() {
             error={newUserError}
             empty={newUser.length === 0 && !newUserLoading && !newUserError}
             onRetry={loadNewUser}
+            description="新用户的增长趋势，反映平台的拉新速度和市场扩展情况。新用户定义为首次在 usage_logs 中出现的用户"
           >
             <Column
               data={newUser}
@@ -246,6 +254,7 @@ export default function Adoption() {
             error={channelUsersError}
             empty={channelUsers.length === 0 && !channelUsersLoading && !channelUsersError}
             onRetry={loadChannelUsers}
+            description="按渠道分组统计去重用户数，了解不同 AI 供应商覆盖的用户群体大小"
           >
             <Column
               data={channelUsers}
@@ -262,6 +271,7 @@ export default function Adoption() {
             error={modelUsersError}
             empty={modelUsers.length === 0 && !modelUsersLoading && !modelUsersError}
             onRetry={loadModelUsers}
+            description="按模型分组统计去重用户数，了解不同模型的用户覆盖度和偏好"
           >
             <Column
               data={modelUsers}
@@ -282,6 +292,7 @@ export default function Adoption() {
             error={heatmapError}
             empty={heatmapData.length === 0 && !heatmapLoading && !heatmapError}
             onRetry={loadHeatmap}
+            description="一周内每天不同时段的用户活跃分布（星期 × 小时交叉维度），用于运营时段投放决策"
           >
             <Column
               data={heatmapData}
@@ -299,6 +310,7 @@ export default function Adoption() {
             error={projectsError}
             empty={projects.length === 0 && !projectsLoading && !projectsError}
             onRetry={loadProjects}
+            description="各项目的请求总量和用户数排名，了解哪些项目使用量最大、用户数最多"
           >
             <MetricTable
               dataSource={projects}

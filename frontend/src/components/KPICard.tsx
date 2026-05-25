@@ -1,5 +1,5 @@
-import { Card, Statistic, Flex } from 'antd'
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons'
+import { Card, Statistic, Flex, Tooltip } from 'antd'
+import { ArrowUpOutlined, ArrowDownOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 interface KPICardProps {
   title: string
@@ -10,15 +10,25 @@ interface KPICardProps {
   trend?: 'up' | 'down' | null
   trendValue?: string
   loading?: boolean
+  description?: string
 }
 
 export default function KPICard({
-  title, value, prefix, suffix, precision = 2, trend, trendValue, loading,
+  title, value, prefix, suffix, precision = 2, trend, trendValue, loading, description,
 }: KPICardProps) {
   return (
     <Card loading={loading} hoverable>
       <Statistic
-        title={title}
+        title={
+          <span>
+            {title}
+            {description && (
+              <Tooltip title={description}>
+                <InfoCircleOutlined style={{ marginLeft: 6, color: '#8c8c8c', fontSize: 13, cursor: 'help' }} />
+              </Tooltip>
+            )}
+          </span>
+        }
         value={value}
         precision={typeof value === 'number' ? precision : undefined}
         prefix={prefix}

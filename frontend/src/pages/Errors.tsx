@@ -147,6 +147,7 @@ export default function Errors() {
             error={rateTrendError}
             empty={rateTrend.length === 0 && !rateTrendLoading && !rateTrendError}
             onRetry={loadRateTrend}
+            description="错误率随时间的波动趋势，快速定位异常时间段，监控平台稳定性变化"
           >
             <Line
               data={rateTrend}
@@ -163,6 +164,7 @@ export default function Errors() {
             error={typeDistError}
             empty={typeDist.length === 0 && !typeDistLoading && !typeDistError}
             onRetry={loadTypeDist}
+            description="各错误类型（HTTP 状态码）的数量和占比分布，了解错误构成，优先解决高频错误"
           >
             <Pie
               data={typeDist}
@@ -182,6 +184,7 @@ export default function Errors() {
             error={byModelError}
             empty={byModel.length === 0 && !byModelLoading && !byModelError}
             onRetry={loadByModel}
+            description="各模型产生的错误数量对比，识别稳定性较差的模型，辅助模型选型决策"
           >
             <Column
               data={byModel}
@@ -198,6 +201,7 @@ export default function Errors() {
             error={byChannelError}
             empty={byChannel.length === 0 && !byChannelLoading && !byChannelError}
             onRetry={loadByChannel}
+            description="各渠道产生的错误数量对比，识别可靠性较低的 AI 供应商渠道"
           >
             <Column
               data={byChannel}
@@ -218,6 +222,7 @@ export default function Errors() {
             error={heatmapError}
             empty={heatmapData.length === 0 && !heatmapLoading && !heatmapError}
             onRetry={loadHeatmap}
+            description="不同时段和星期维度的错误数量分布（小时 × 星期交叉分析），发现错误高发时间段"
           >
             <Column
               data={heatmapData}
@@ -235,6 +240,7 @@ export default function Errors() {
             error={topUsersError}
             empty={topUsers.length === 0 && !topUsersLoading && !topUsersError}
             onRetry={loadTopUsers}
+            description="请求失败次数最多的用户排名，帮助定位问题用户和异常使用模式"
           >
             <MetricTable
               dataSource={topUsers}
@@ -261,6 +267,7 @@ export default function Errors() {
             error={channelMatrixError}
             empty={channelMatrix.length === 0 && !channelMatrixLoading && !channelMatrixError}
             onRetry={loadChannelMatrix}
+            description="渠道与状态码的交叉分析表，了解各渠道的响应质量分布和异常模式"
           >
             <MetricTable
               dataSource={channelMatrix}
@@ -283,6 +290,7 @@ export default function Errors() {
                 error={retryRateError}
                 empty={retryRate.length === 0 && !retryRateLoading && !retryRateError}
                 onRetry={loadRetryRate}
+                description="重试请求的成功率分布，评估重试机制的有效性和自动恢复能力"
               >
                 <Pie
                   data={retryRate}
@@ -298,6 +306,7 @@ export default function Errors() {
                 error={statusCodeDistError}
                 empty={statusCodeDist.length === 0 && !statusCodeDistLoading && !statusCodeDistError}
                 onRetry={loadStatusCodeDist}
+                description="各 HTTP 状态码的占比分布，了解请求的完整响应画像（成功/失败/限流等）"
               >
                 <Pie
                   data={statusCodeDist}

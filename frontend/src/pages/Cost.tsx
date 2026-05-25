@@ -128,6 +128,7 @@ export default function Cost() {
             error={tokenFeeError}
             empty={tokenFee.length === 0 && !tokenFeeLoading && !tokenFeeError}
             onRetry={loadTokenFee}
+            description="Token 消耗与费用的时间序列趋势（区分 Prompt 和 Completion），关联分析用量与成本变化"
           >
             <Line
               data={tokenFee.flatMap(d => [
@@ -147,6 +148,7 @@ export default function Cost() {
             error={modelDistError}
             empty={modelDist.length === 0 && !modelDistLoading && !modelDistError}
             onRetry={loadModelDist}
+            description="各模型产生的费用对比，了解成本构成的模型分布，定位高消耗模型"
           >
             <Column
               data={modelDist}
@@ -167,6 +169,7 @@ export default function Cost() {
             error={channelCompError}
             empty={channelComp.length === 0 && !channelCompLoading && !channelCompError}
             onRetry={loadChannelComp}
+            description="各渠道产生的费用对比，评估不同 AI 供应商的成本表现，辅助渠道选择决策"
           >
             <Column
               data={channelComp}
@@ -183,6 +186,7 @@ export default function Cost() {
             error={userTopError}
             empty={userTop.length === 0 && !userTopLoading && !userTopError}
             onRetry={loadUserTop}
+            description="产生费用最多的 Top 用户排名，识别高消耗用户，辅助成本控制和预算分配"
           >
             <MetricTable
               dataSource={userTop}
@@ -209,6 +213,7 @@ export default function Cost() {
             error={projectDailyError}
             empty={projectDaily.length === 0 && !projectDailyLoading && !projectDailyError}
             onRetry={loadProjectDaily}
+            description="各项目的每日费用趋势，了解项目级成本消耗，辅助项目维度的成本核算"
           >
             <Line
               data={projectDaily.map(p => ({
@@ -228,6 +233,7 @@ export default function Cost() {
             error={cacheHitError}
             empty={cacheHit.length === 0 && !cacheHitLoading && !cacheHitError}
             onRetry={loadCacheHit}
+            description="缓存命中率的时间序列趋势，命中率越高说明重复查询越多，缓存策略越有效，可节省成本"
           >
             <Line
               data={cacheHit}
@@ -248,6 +254,7 @@ export default function Cost() {
             error={reasoningError}
             empty={reasoning.length === 0 && !reasoningLoading && !reasoningError}
             onRetry={loadReasoning}
+            description="推理 Token 占总 Token 的比例趋势，了解推理计算的开销占比，辅助模型选择优化"
           >
             <Line
               data={reasoning}
@@ -264,6 +271,7 @@ export default function Cost() {
             error={forecastError}
             empty={forecastActual.length === 0 && !forecastLoading && !forecastError}
             onRetry={loadForecast}
+            description="基于历史成本数据的趋势预测，辅助预算规划和成本控制决策"
           >
             <Line
               data={[...forecastActual, ...forecastPred]}

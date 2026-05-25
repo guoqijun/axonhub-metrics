@@ -121,6 +121,7 @@ export default function Channels() {
             error={comparisonError}
             empty={comparison.length === 0 && !comparisonLoading && !comparisonError}
             onRetry={loadComparison}
+            description="渠道多维度对比（请求量、用户数、延迟、费用、错误率），综合评估各 AI 供应商渠道表现"
           >
             <MetricTable
               dataSource={comparison}
@@ -145,6 +146,7 @@ export default function Channels() {
             error={latencyCompError}
             empty={latencyComp.length === 0 && !latencyCompLoading && !latencyCompError}
             onRetry={loadLatencyComp}
+            description="各渠道的平均延迟和最大延迟对比，评估 AI 供应商的响应性能"
           >
             <Column
               data={latencyComp.flatMap(l => [
@@ -169,6 +171,7 @@ export default function Channels() {
             error={latencyHeatmapError}
             empty={latencyHeatmap.length === 0 && !latencyHeatmapLoading && !latencyHeatmapError}
             onRetry={loadLatencyHeatmap}
+            description="不同时段各渠道的平均延迟变化（渠道 × 小时交叉分析），发现高峰期性能瓶颈"
           >
             <Column
               data={latencyHeatmap}
@@ -186,6 +189,7 @@ export default function Channels() {
             error={healthError}
             empty={health.length === 0 && !healthLoading && !healthError}
             onRetry={loadHealth}
+            description="各渠道的综合健康评分（基于延迟、错误率等多维指标），快速识别需要关注的渠道"
           >
             <Column
               data={health}
@@ -206,6 +210,7 @@ export default function Channels() {
             error={errorTrendError}
             empty={errorTrendLines.length === 0 && !errorTrendLoading && !errorTrendError}
             onRetry={loadErrorTrend}
+            description="各渠道错误率的时间序列变化，监控不同 AI 供应商的稳定性波动"
           >
             <Line
               data={errorTrendLines}
@@ -223,6 +228,7 @@ export default function Channels() {
             error={quotaError}
             empty={quota.length === 0 && !quotaLoading && !quotaError}
             onRetry={loadQuota}
+            description="各渠道的配额使用状态和重置时间，监控渠道可用性，提前防范服务中断"
           >
             <MetricTable
               dataSource={quota}
@@ -257,6 +263,7 @@ export default function Channels() {
             error={priceError}
             empty={price.length === 0 && !priceLoading && !priceError}
             onRetry={loadPrice}
+            description="各渠道按模型的每 Token 平均成本对比，辅助成本优化和渠道选择决策"
           >
             <MetricTable
               dataSource={price}

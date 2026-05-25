@@ -145,6 +145,7 @@ export default function Usage() {
             precision={1}
             suffix="rounds"
             loading={convRoundsLoading}
+            description="用户每次对话的平均交互轮次（按 trace_id 分组统计），反映用户与 AI 的互动深度"
           />
         </Col>
         <Col xs={24} sm={8}>
@@ -154,6 +155,7 @@ export default function Usage() {
             precision={0}
             suffix="tokens"
             loading={avgTokensLoading}
+            description="每次请求的平均 Token 消耗量（含 Prompt 和 Completion），了解使用强度的变化"
           />
         </Col>
         <Col xs={24} sm={8}>
@@ -163,6 +165,7 @@ export default function Usage() {
             suffix="%"
             precision={1}
             loading={streamRatioLoading}
+            description="流式接口的使用占比（stream=true 的请求比例），流式请求提供更好的用户体验（首 Token 延迟更低）"
           />
         </Col>
       </Row>
@@ -176,6 +179,7 @@ export default function Usage() {
             error={sessionDurError}
             empty={sessionDur.length === 0 && !sessionDurLoading && !sessionDurError}
             onRetry={loadSessionDur}
+            description="用户会话时长的分段统计（按 trace_id 计算起止时间差），了解用户单次使用时长分布"
           >
             <Pie
               data={sessionDur}
@@ -191,6 +195,7 @@ export default function Usage() {
             error={freqBucketsError}
             empty={freqBuckets.length === 0 && !freqBucketsLoading && !freqBucketsError}
             onRetry={loadFreqBuckets}
+            description="按用户请求数分桶统计（1 次/2-5 次/6-20 次等），了解用户的使用频率分布结构"
           >
             <Column
               data={freqBuckets}
@@ -211,6 +216,7 @@ export default function Usage() {
             error={channelDailyError}
             empty={channelDaily.length === 0 && !channelDailyLoading && !channelDailyError}
             onRetry={loadChannelDaily}
+            description="各渠道每日平均请求量对比，评估不同 AI 供应商渠道的使用强度"
           >
             <Column
               data={channelDaily}
@@ -227,6 +233,7 @@ export default function Usage() {
             error={perCapitaError}
             empty={perCapita.length === 0 && !perCapitaLoading && !perCapitaError}
             onRetry={loadPerCapita}
+            description="每日人均请求数趋势（总请求数 ÷ 日活跃用户数），反映用户使用密度的变化"
           >
             <Line
               data={perCapita}
@@ -247,6 +254,7 @@ export default function Usage() {
             error={retentionCohortError}
             empty={cohortTableData.length === 0 && !retentionCohortLoading && !retentionCohortError}
             onRetry={loadRetentionCohort}
+            description="按注册月份（首次出现月份）分组的用户留存追踪表，评估不同时期用户的长期留存表现"
           >
             <MetricTable
               dataSource={cohortTableData}

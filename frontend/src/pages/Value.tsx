@@ -104,6 +104,7 @@ export default function Value() {
             error={heavyUsersError}
             empty={heavyUsers.length === 0 && !heavyUsersLoading && !heavyUsersError}
             onRetry={loadHeavyUsers}
+            description="请求量最多的 Top 20 用户排名（含请求数、Token 消耗、费用），识别核心高价值用户"
           >
             <MetricTable
               dataSource={heavyUsers}
@@ -126,6 +127,7 @@ export default function Value() {
             error={rfmError}
             empty={rfm.length === 0 && !rfmLoading && !rfmError}
             onRetry={loadRfm}
+            description="基于请求频率（≥100 次）和费用（≥$10）将用户分为四类：高频高价值、高频低价值、低频高价值、低频低价值"
           >
             <Pie
               data={rfm}
@@ -145,6 +147,7 @@ export default function Value() {
             error={tokenRankingError}
             empty={tokenRanking.length === 0 && !tokenRankingLoading && !tokenRankingError}
             onRetry={loadTokenRanking}
+            description="各模型的 Token 消耗排名（区分 Prompt 和 Completion），了解模型级算力消耗分布"
           >
             <Column
               data={tokenRanking.flatMap(r => [
@@ -165,6 +168,7 @@ export default function Value() {
             error={modelOutputError}
             empty={modelOutput.length === 0 && !modelOutputLoading && !modelOutputError}
             onRetry={loadModelOutput}
+            description="各模型的 Completion Token 产出排名（含请求数、平均产出长度），评估模型的内容生成效率"
           >
             <Column
               data={modelOutput}
@@ -184,6 +188,7 @@ export default function Value() {
             error={channelEffError}
             empty={channelEff.length === 0 && !channelEffLoading && !channelEffError}
             onRetry={loadChannelEff}
+            description="各渠道每美元产出的 Token 数（Tokens per Dollar），评估 AI 供应商的成本效益"
           >
             <Column
               data={channelEff}
@@ -200,6 +205,7 @@ export default function Value() {
             error={projectContribError}
             empty={projectLines.length === 0 && !projectContribLoading && !projectContribError}
             onRetry={loadProjectContrib}
+            description="各项目请求量和 Token 消耗的时间序列趋势，了解项目级的使用分布和变化"
           >
             <Line
               data={projectLines}

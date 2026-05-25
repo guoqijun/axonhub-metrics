@@ -125,6 +125,7 @@ export default function Health() {
             error={latencyError}
             empty={latency.length === 0 && !latencyLoading && !latencyError}
             onRetry={loadLatency}
+            description="不同百分位延迟的时间序列趋势（P50/P95/P99），全面评估系统响应性能，P99 反映最差情况"
           >
             <Line
               data={latencySeries}
@@ -142,6 +143,7 @@ export default function Health() {
             error={healthRankError}
             empty={healthRank.length === 0 && !healthRankLoading && !healthRankError}
             onRetry={loadHealthRank}
+            description="各渠道的综合健康评分排名（基于延迟、错误率等指标），快速识别需要关注的渠道"
           >
             <Column
               data={healthRank}
@@ -162,6 +164,7 @@ export default function Health() {
             error={slowReqsError}
             empty={slowReqs.length === 0 && !slowReqsLoading && !slowReqsError}
             onRetry={loadSlowReqs}
+            description="延迟最高的 Top 50 请求详情（模型、渠道、延迟、状态），用于性能问题排查和优化"
           >
             <MetricTable
               dataSource={slowReqs}
@@ -184,6 +187,7 @@ export default function Health() {
             error={quotaAlertsError}
             empty={quotaAlerts.length === 0 && !quotaAlertsLoading && !quotaAlertsError}
             onRetry={loadQuotaAlerts}
+            description="各渠道的配额状态和预警信息（正常/耗尽/即将重置），提前防范服务中断风险"
           >
             <MetricTable
               dataSource={quotaAlerts}
@@ -211,6 +215,7 @@ export default function Health() {
             error={probeError}
             empty={probeSeries.length === 0 && !probeLoading && !probeError}
             onRetry={loadProbe}
+            description="探针监控的每秒 Token 处理量（TPS）和首 Token 延迟（TTFT）趋势，主动探测 AI 服务性能"
           >
             <Line
               data={probeSeries}
@@ -228,6 +233,7 @@ export default function Health() {
             error={cacheHitError}
             empty={cacheHit.length === 0 && !cacheHitLoading && !cacheHitError}
             onRetry={loadCacheHit}
+            description="缓存命中率的时间序列趋势，命中率越高说明缓存策略越有效，可降低延迟和节省成本"
           >
             <Line
               data={cacheHit}
@@ -248,6 +254,7 @@ export default function Health() {
             error={availError}
             empty={avail.length === 0 && !availLoading && !availError}
             onRetry={loadAvail}
+            description="每日可用性百分比的时间序列，直观展示服务可用性变化，发现 SLA 达标情况"
           >
             <Column
               data={avail}

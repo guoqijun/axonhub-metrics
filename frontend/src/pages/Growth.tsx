@@ -109,6 +109,7 @@ export default function Growth() {
             error={momYoyError}
             empty={momYoy.length === 0 && !momYoyLoading && !momYoyError}
             onRetry={loadMomYoy}
+            description="月度环比增长数据（请求量、用户数、费用、环比增长率），了解业务的月度变化趋势"
           >
             <MetricTable
               dataSource={momYoy}
@@ -131,6 +132,7 @@ export default function Growth() {
             error={forecastError}
             empty={forecastReqsData.length === 0 && !forecastLoading && !forecastError}
             onRetry={loadForecast}
+            description="基于历史趋势的请求量预测（含实际和预测双线），辅助容量规划和资源预算"
           >
             <Line
               data={forecastReqsData}
@@ -152,6 +154,7 @@ export default function Growth() {
             error={userGrowthError}
             empty={userGrowth.length === 0 && !userGrowthLoading && !userGrowthError}
             onRetry={loadUserGrowth}
+            description="新增用户和累计用户的时间序列（区分新增与累计），了解用户增长态势和存量规模"
           >
             <Line
               data={userGrowth.flatMap(u => [
@@ -172,6 +175,7 @@ export default function Growth() {
             error={modelGrowthError}
             empty={modelGrowth.length === 0 && !modelGrowthLoading && !modelGrowthError}
             onRetry={loadModelGrowth}
+            description="各模型的月度请求数据，了解不同模型的使用增长变化趋势"
           >
             <MetricTable
               dataSource={modelGrowth}
@@ -196,6 +200,7 @@ export default function Growth() {
             error={marketShareError}
             empty={marketShare.length === 0 && !marketShareLoading && !marketShareError}
             onRetry={loadMarketShare}
+            description="各渠道的请求量市场份额占比，了解不同 AI 供应商的渠道格局变化"
           >
             <Pie
               data={latestShare}
@@ -211,6 +216,7 @@ export default function Growth() {
             error={projectRankError}
             empty={projectRank.length === 0 && !projectRankLoading && !projectRankError}
             onRetry={loadProjectRank}
+            description="各项目的请求量排名，了解项目级的使用分布变化，识别增长最快的项目"
           >
             <Column
               data={projectRank}

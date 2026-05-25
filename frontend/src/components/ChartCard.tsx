@@ -1,5 +1,5 @@
-import { Card, Spin, Alert, Button, Empty, Flex, Typography } from 'antd'
-import { ReloadOutlined } from '@ant-design/icons'
+import { Card, Spin, Alert, Button, Empty, Flex, Typography, Tooltip } from 'antd'
+import { ReloadOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 const { Text } = Typography
 
@@ -12,11 +12,12 @@ interface ChartCardProps {
   onRetry?: () => void
   children: React.ReactNode
   height?: number
+  description?: string
 }
 
 export default function ChartCard({
   title, loading = false, error = null, empty = false,
-  extra, onRetry, children, height = 350,
+  extra, onRetry, children, height = 350, description,
 }: ChartCardProps) {
   const renderContent = () => {
     if (loading) {
@@ -56,7 +57,11 @@ export default function ChartCard({
 
   return (
     <Card
-      title={<Text strong>{title}</Text>}
+      title={<Text strong>{title}{description && (
+        <Tooltip title={description}>
+          <InfoCircleOutlined style={{ marginLeft: 6, color: '#8c8c8c', fontSize: 13, cursor: 'help' }} />
+        </Tooltip>
+      )}</Text>}
       extra={extra}
       size="small"
     >
