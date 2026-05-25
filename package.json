@@ -1,0 +1,10 @@
+{
+  "name": "axonhub-metrics",
+  "private": true,
+  "scripts": {
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8000"
+  }
+}
