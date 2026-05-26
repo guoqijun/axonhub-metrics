@@ -82,7 +82,7 @@ export default function MainLayout() {
             borderBottom: '1px solid #e2e8f0',
           }}
         >
-          <Text>CodeV运维分析平台</Text>
+          <Text>CodeV运营指标</Text>
           <Flex align="center" gap={12}>
             <Text type="secondary">{username}</Text>
             <Button

@@ -24,7 +24,7 @@ export default function Login() {
       <Card style={{ width: 400 }}>
         <Flex vertical align="center" gap={8} style={{ marginBottom: 24 }}>
           <Title level={3} style={{ margin: 0 }}>AxonHub Metrics</Title>
-          <Text type="secondary">CodeV运维分析平台</Text>
+          <Text type="secondary">CodeV运营指标</Text>
         </Flex>
         <Form layout="vertical" onFinish={onSubmit}>
           <Form.Item label="Username" required>
