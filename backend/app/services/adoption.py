@@ -4,6 +4,7 @@ from app.database import get_db
 from app.models.adoption import (
     DAUMauPoint, UsageRatio, ChannelActiveUsers,
     ModelUserCount, ActivityHeatmapPoint, ProjectRanking, UserPenetration,
+    OrgUserDistribution,
 )
 from app.models.overview import TrendPoint
 from app.services.base import FilterParams, date_trunc_expr, apply_filters
@@ -209,3 +210,24 @@ class AdoptionService:
             total_users=total_users,
             penetration_rate=rate,
         )
+
+    async def get_org_user_distribution(self, params: FilterParams) -> List[OrgUserDistribution]:
+        where, bind = apply_filters(params)
+
+        rows = await self.db.fetch_all(f"""
+            SELECT ak.employee_org_name,
+                   COUNT(DISTINCT ak.employee_id) as user_count
+            FROM usage_logs ul
+            LEFT JOIN api_keys ak ON ul.api_key_id = ak.id
+            WHERE {where} AND ak.employee_org_name IS NOT NULL
+            GROUP BY ak.employee_org_name
+            ORDER BY user_count DESC
+        """, bind)
+
+        return [
+            OrgUserDistribution(
+                employee_org_name=r["employee_org_name"],
+                user_count=r["user_count"],
+            )
+            for r in rows
+        ]

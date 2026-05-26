@@ -33,6 +33,13 @@ html {
   opacity: 0.75;
 }
 
+/* Wider tooltip for metric descriptions */
+.metric-tip {
+  max-width: 380px;
+  line-height: 1.7;
+  font-size: 13px;
+}
+
 .filter-tag-close {
   margin-left: 4px;
   border: none;

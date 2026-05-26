@@ -6,10 +6,11 @@ interface MetricTableProps<T> {
   dataSource: T[]
   loading?: boolean
   rowKey?: string | ((record: T, index?: number) => string)
+  scrollY?: number
 }
 
 export default function MetricTable<T extends object>({
-  columns, dataSource, loading, rowKey = 'id',
+  columns, dataSource, loading, rowKey = 'id', scrollY = 280,
 }: MetricTableProps<T>) {
   return (
     <Table<T>
@@ -19,6 +20,7 @@ export default function MetricTable<T extends object>({
       rowKey={rowKey as any}
       size="small"
       pagination={dataSource.length > 20 ? { pageSize: 20 } : false}
+      scroll={{ y: scrollY }}
     />
   )
 }

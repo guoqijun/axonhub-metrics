@@ -13,7 +13,7 @@ interface ChartCardProps {
   onRetry?: () => void
   children: React.ReactNode
   height?: number
-  description?: string
+  description?: React.ReactNode
 }
 
 export default function ChartCard({
@@ -61,7 +61,7 @@ export default function ChartCard({
   return (
     <Card
       title={<Text strong>{title}{description && (
-        <Tooltip title={description}>
+        <Tooltip title={description} overlayClassName="metric-tip">
           <InfoCircleOutlined className="info-icon" style={{ color: token.colorTextTertiary }} />
         </Tooltip>
       )}</Text>}

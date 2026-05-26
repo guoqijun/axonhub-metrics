@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Flex } from 'antd'
-import { Column, Line, Pie } from '@ant-design/charts'
+import { Column, Line } from '@ant-design/charts'
 import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
+import PieWithLegend from '../components/PieWithLegend'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
@@ -104,6 +105,8 @@ export default function Overview() {
   useEffect(() => { loadModelDist() }, [loadModelDist])
   useEffect(() => { loadErrorTrend() }, [loadErrorTrend])
 
+  const modelPieData = modelDist.map(d => ({ type: d.model_id, value: d.request_count }))
+
   return (
     <Flex vertical gap={16}>
       {/* KPI Cards Row */}
@@ -115,7 +118,7 @@ export default function Overview() {
             suffix="req"
             precision={0}
             loading={kpiLoading}
-            description="当日平台收到的总 API 请求次数，反映平台当前的使用活跃度"
+            description={<><b>指标含义：</b>当日平台收到的所有 API 请求的总次数<br /><b>业务意义：</b>反映平台整体活跃度和使用规模，是核心业务量指标<br /><b>计算逻辑：</b>COUNT(usage_logs)，按 created_at 筛选当日记录，排除非 API 调用记录<br /><b>补充说明：</b>建议结合日环比观察趋势变化，环比增长说明平台处于上升期</>}
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -125,7 +128,7 @@ export default function Overview() {
             suffix="users"
             precision={0}
             loading={kpiLoading}
-            description="当日至少发起一次 API 请求的唯一用户数（按 employee_id 去重），衡量用户覆盖广度"
+            description={<><b>指标含义：</b>当日至少成功发起一次 API 请求的去重用户数，按 employee_id 去重<br /><b>业务意义：</b>衡量平台的用户覆盖广度和日活规模，反映用户基础的真实活跃情况<br /><b>计算逻辑：</b>COUNT(DISTINCT employee_id)，筛选当日有请求记录的用户<br /><b>补充说明：</b>注意区分注册用户和活跃用户，活跃用户更能反映平台的实际使用情况</>}
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -137,7 +140,7 @@ export default function Overview() {
             trend={kpi && kpi.success_rate > 0.95 ? 'up' : kpi ? 'down' : null}
             trendValue={kpi ? `${(kpi.success_rate * 100).toFixed(1)}%` : undefined}
             loading={kpiLoading}
-            description="近 30 天请求完成率（非 failed/canceled），反映平台整体稳定性"
+            description={<><b>指标含义：</b>近 30 天内状态非 failed 或 canceled 的请求占总请求的比例<br /><b>业务意义：</b>衡量平台整体稳定性和服务质量，是 SLA 的核心指标<br /><b>计算逻辑：</b>成功请求数 ÷ 总请求数 × 100%，成功定义为 status 不为 failed/canceled<br /><b>补充说明：</b>建议目标值设置在 99.9% 以上，低于 99% 需要关注</>}
           />
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -147,7 +150,7 @@ export default function Overview() {
             prefix="$"
             precision={4}
             loading={kpiLoading}
-            description="当日所有请求的总费用，基于 Token 消耗 × 模型单价计算，反映平台运营成本"
+            description={<><b>指标含义：</b>当日所有 API 请求产生的总费用，基于 Token 消耗 × 各模型单价计算<br /><b>业务意义：</b>反映平台的运营成本和商业价值，辅助预算管理和成本控制<br /><b>计算逻辑：</b>SUM(usage_logs.total_cost)，由各记录的 Token 用量 × 模型单价汇总<br /><b>补充说明：</b>费用受模型选择影响较大，建议结合模型分布分析成本构成</>}
           />
         </Col>
       </Row>
@@ -161,7 +164,7 @@ export default function Overview() {
             error={requestsTrendError}
             empty={requestsTrend.length === 0 && !requestsTrendLoading && !requestsTrendError}
             onRetry={loadRequestsTrend}
-            description="每日请求量的时间序列变化，用于观察使用量的增长趋势和周期性波动"
+            description={<><b>指标含义：</b>每日总请求量在时间轴上的变化曲线<br /><b>业务意义：</b>识别使用量的增长趋势、周期性波动和异常峰值，辅助容量规划<br /><b>计算逻辑：</b>按日期 GROUP BY，COUNT(*) 每日请求总数，按时间升序排列<br /><b>补充说明：</b>建议结合工作日/节假日维度分析，通常工作日使用量更高</>}
           >
             <Column
               data={requestsTrend}
@@ -179,7 +182,7 @@ export default function Overview() {
             error={tokenTrendError}
             empty={tokenTrend.length === 0 && !tokenTrendLoading && !tokenTrendError}
             onRetry={loadTokenTrend}
-            description="每日 Prompt 和 Completion Token 消耗量变化，区分输入和输出 Token，了解模型算力消耗分布"
+            description={<><b>指标含义：</b>每日 Prompt Token（输入）和 Completion Token（输出）的消耗量变化<br /><b>业务意义：</b>区分输入和输出的 Token 消耗，了解算力资源分配和模型使用模式<br /><b>计算逻辑：</b>按日期和 Token 类型（prompt/completion）分组汇总 SUM(token_count)<br /><b>补充说明：</b>Prompt Token 反映输入数据量，Completion Token 反映模型生成量，两者比例可评估使用场景</>}
           >
             <Line
               data={tokenTrend.flatMap((d) => [
@@ -204,16 +207,10 @@ export default function Overview() {
             error={modelDistError}
             empty={modelDist.length === 0 && !modelDistLoading && !modelDistError}
             onRetry={loadModelDist}
-            description="各模型请求量的占比分布，反映用户对不同模型的选择偏好"
+            description={<><b>指标含义：</b>各 AI 模型在总请求量中的占比分布<br /><b>业务意义：</b>了解用户对不同模型的选择偏好，指导模型选型决策和资源采购<br /><b>计算逻辑：</b>按 model_id 分组 COUNT(*)，计算各模型占比 = 模型请求数 ÷ 总请求数 × 100%<br /><b>补充说明：</b>结合费用数据可评估各模型的 ROI，低成本高性能模型应优先推广</>}
+            height={300}
           >
-            <Pie
-              data={modelDist}
-              angleField="request_count"
-              colorField="model_id"
-              color={CHART_COLORS}
-              label={{ text: 'percentage', style: { fontSize: 10 } }}
-              legend={{ color: { title: false, position: 'right', row: 5 } }}
-            />
+            <PieWithLegend data={modelPieData} loading={modelDistLoading} height={280} />
           </ChartCard>
         </Col>
         <Col xs={24} lg={12}>
@@ -223,7 +220,7 @@ export default function Overview() {
             error={errorTrendError}
             empty={errorTrend.length === 0 && !errorTrendLoading && !errorTrendError}
             onRetry={loadErrorTrend}
-            description="每日请求错误率的趋势变化，用于监控平台稳定性，及时发现异常波动"
+            description={<><b>指标含义：</b>每日请求中发生错误的比率随时间的变化趋势<br /><b>业务意义：</b>监控平台稳定性，及时发现异常波动，定位故障时间点<br /><b>计算逻辑：</b>SUM(failed_count) ÷ COUNT(*) × 100%，每日汇总计算。支持按状态码细分<br /><b>补充说明：</b>错误率突增通常由上游 AI 供应商故障、网络问题或配额耗尽引起</>}
           >
             <Line
               data={errorTrend}

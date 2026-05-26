@@ -44,3 +44,8 @@ class UserPenetration(BaseModel):
     heavy_users: int = 0
     total_users: int = 0
     penetration_rate: float = 0.0
+
+
+class OrgUserDistribution(BaseModel):
+    employee_org_name: Optional[str] = None
+    user_count: int = 0

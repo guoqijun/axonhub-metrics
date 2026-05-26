@@ -122,7 +122,7 @@ export default function Channels() {
             error={comparisonError}
             empty={comparison.length === 0 && !comparisonLoading && !comparisonError}
             onRetry={loadComparison}
-            description="渠道多维度对比（请求量、用户数、延迟、费用、错误率），综合评估各 AI 供应商渠道表现"
+            description={<><b>指标含义：</b>各 AI 供应商渠道的多维度对比数据，涵盖请求量、用户数、平均延迟、总费用、错误率五大核心指标<br /><b>业务意义：</b>综合评估各渠道表现，辅助渠道权重分配和供应商管理决策，发现优势渠道和问题渠道<br /><b>计算逻辑：</b>按 channel_id 分组聚合：COUNT(*) 请求量、COUNT(DISTINCT employee_id) 用户数、AVG(latency_ms) 延迟、SUM(total_cost) 费用、SUM(error_count)/COUNT(*) 错误率<br /><b>补充说明：</b>建议将流量合理分散到多个渠道，避免单一依赖。结合健康评分可全面评估渠道质量</>}
           >
             <MetricTable
               dataSource={comparison}
@@ -147,7 +147,7 @@ export default function Channels() {
             error={latencyCompError}
             empty={latencyComp.length === 0 && !latencyCompLoading && !latencyCompError}
             onRetry={loadLatencyComp}
-            description="各渠道的平均延迟和最大延迟对比，评估 AI 供应商的响应性能"
+            description={<><b>指标含义：</b>各 AI 供应商渠道的平均延迟（Avg Latency）和最大延迟（Max Latency）的柱状对比<br /><b>业务意义：</b>评估各 AI 供应商的响应性能，选择低延迟渠道提升用户体验。最大延迟反映最差情况<br /><b>计算逻辑：</b>按 channel_id 分组，AVG(latency_ms) 平均延迟、MAX(latency_ms) 最大延迟，按平均延迟升序排列<br /><b>补充说明：</b>延迟受网络状况、模型复杂度和请求负载影响。建议在高峰期和非高峰期分别评估</>}
           >
             <Column
               data={latencyComp.flatMap(l => [
@@ -173,7 +173,7 @@ export default function Channels() {
             error={latencyHeatmapError}
             empty={latencyHeatmap.length === 0 && !latencyHeatmapLoading && !latencyHeatmapError}
             onRetry={loadLatencyHeatmap}
-            description="不同时段各渠道的平均延迟变化（渠道 × 小时交叉分析），发现高峰期性能瓶颈"
+            description={<><b>指标含义：</b>不同时段（小时）各 AI 供应商渠道的平均延迟变化，渠道 × 小时交叉分析<br /><b>业务意义：</b>发现各渠道在一天中的性能波动模式，识别高峰期性能瓶颈，优化流量调度策略<br /><b>计算逻辑：</b>按 channel_id 和 EXTRACT(HOUR FROM created_at) 分组，AVG(latency_ms)<br /><b>补充说明：</b>部分渠道可能在特定时段（如美国白天）因负载高导致延迟上升，可在该时段将流量切换到表现更好的渠道</>}
           >
             <Column
               data={latencyHeatmap}
@@ -192,7 +192,7 @@ export default function Channels() {
             error={healthError}
             empty={health.length === 0 && !healthLoading && !healthError}
             onRetry={loadHealth}
-            description="各渠道的综合健康评分（基于延迟、错误率等多维指标），快速识别需要关注的渠道"
+            description={<><b>指标含义：</b>各渠道的综合健康评分，基于延迟、错误率、配额使用率等多维指标加权计算<br /><b>业务意义：</b>快速识别需要关注的渠道，分数越低越需要排查问题或准备切换。理想评分应在 90 分以上<br /><b>计算逻辑：</b>加权综合评分 = 100 - (延迟扣分 + 错误率扣分 + 配额扣分)。延迟高、错误多、配额紧张都会降低评分<br /><b>补充说明：</b>健康评分是综合指标，低于 80 分建议告警并准备流量切换。各维度权重可根据业务需求调整</>}
           >
             <Column
               data={health}
@@ -214,7 +214,7 @@ export default function Channels() {
             error={errorTrendError}
             empty={errorTrendLines.length === 0 && !errorTrendLoading && !errorTrendError}
             onRetry={loadErrorTrend}
-            description="各渠道错误率的时间序列变化，监控不同 AI 供应商的稳定性波动"
+            description={<><b>指标含义：</b>各 AI 供应商渠道的每日错误率随时间的变化趋势，多渠道对比<br /><b>业务意义：</b>监控不同渠道的稳定性波动，及时发现渠道质量恶化趋势，为渠道切换提供数据依据<br /><b>计算逻辑：</b>按 channel_id 和日期分组，SUM(error_count)/COUNT(*) × 100%，按日期升序展示多系列<br /><b>补充说明：</b>错误率突增通常由上游服务故障引起，建议配置渠道级错误率告警阈值（如 &gt;5%）</>}
           >
             <Line
               data={errorTrendLines}
@@ -233,7 +233,7 @@ export default function Channels() {
             error={quotaError}
             empty={quota.length === 0 && !quotaLoading && !quotaError}
             onRetry={loadQuota}
-            description="各渠道的配额使用状态和重置时间，监控渠道可用性，提前防范服务中断"
+            description={<><b>指标含义：</b>各 AI 供应商渠道的配额使用状态（正常/耗尽/即将重置）和下次配额重置时间<br /><b>业务意义：</b>监控渠道可用性，提前防范因配额耗尽导致的服务中断。配额耗尽前应及时切换或申请提升<br /><b>计算逻辑：</b>从数据源读取各渠道的已用量、上限、重置时间，计算使用率 = 已用量/上限 × 100%，判断状态<br /><b>补充说明：</b>建议在配额使用率达到 80% 时发送预警，90% 时自动触发流量切换。不同渠道的配额周期可能不同（按天/月）</>}
           >
             <MetricTable
               dataSource={quota}
@@ -268,7 +268,7 @@ export default function Channels() {
             error={priceError}
             empty={price.length === 0 && !priceLoading && !priceError}
             onRetry={loadPrice}
-            description="各渠道按模型的每 Token 平均成本对比，辅助成本优化和渠道选择决策"
+            description={<><b>指标含义：</b>各 AI 供应商渠道按模型分组的每 Token 平均成本（Cost per Token）对比<br /><b>业务意义：</b>辅助成本优化和渠道选择决策，选择性价比更高的渠道以降低运营成本<br /><b>计算逻辑：</b>按 channel_id 和 model_id 分组，SUM(total_cost)/SUM(total_tokens)，计算每 Token 均价。建议同模型跨渠道对比<br /><b>补充说明：</b>价格不是唯一因素，应综合延迟、稳定性、可用模型种类等因素权衡选择。同模型跨渠道价差大时值得关注</>}
           >
             <MetricTable
               dataSource={price}

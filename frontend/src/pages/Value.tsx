@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Flex } from 'antd'
-import { Column, Line, Pie } from '@ant-design/charts'
+import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
+import PieWithLegend from '../components/PieWithLegend'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
@@ -95,6 +96,8 @@ export default function Value() {
     project: p.project_name || `#${p.project_id}`,
   }))
 
+  const rfmPieData = rfm.map(d => ({ type: d.quadrant, value: d.user_count }))
+
   return (
     <Flex vertical gap={16}>
       <Row gutter={[16, 16]}>
@@ -105,7 +108,7 @@ export default function Value() {
             error={heavyUsersError}
             empty={heavyUsers.length === 0 && !heavyUsersLoading && !heavyUsersError}
             onRetry={loadHeavyUsers}
-            description="请求量最多的 Top 20 用户排名（含请求数、Token 消耗、费用），识别核心高价值用户"
+            description={<><b>指标含义：</b>按请求量降序排列的前 20 名用户及其请求数、Token 消耗、费用等详细数据<br /><b>业务意义：</b>识别核心高价值用户（HVC），为 VIP 服务、个性化运营和重点维护提供数据支撑<br /><b>计算逻辑：</b>按 employee_id 分组，SUM(request_count)、SUM(total_tokens)、SUM(total_cost)，按请求量 DESC LIMIT 20<br /><b>补充说明：</b>重度用户通常贡献了大部分的使用量和费用，符合 80/20 法则。应重点关注这些用户的体验和留存</>}
           >
             <MetricTable
               dataSource={heavyUsers}
@@ -128,15 +131,10 @@ export default function Value() {
             error={rfmError}
             empty={rfm.length === 0 && !rfmLoading && !rfmError}
             onRetry={loadRfm}
-            description="基于请求频率（≥100 次）和费用（≥$10）将用户分为四类：高频高价值、高频低价值、低频高价值、低频低价值"
+            description={<><b>指标含义：</b>基于请求频率高频（≥100 次）和费用高价（≥$10）两个维度，将用户划分为四个象限：高频高价值、高频低价值、低频高价值、低频低价值<br /><b>业务意义：</b>辅助用户分层运营，对不同象限用户采取差异化策略。高频高价值用户是核心用户应重点维护，低频高价值用户有提升频率的潜力<br /><b>计算逻辑：</b>统计每个用户的请求总数和总费用，以 100 次请求和 $10 费用为阈值进行四象限分类，COUNT 各象限用户数<br /><b>补充说明：</b>阈值可根据平台的实际情况调整。建议定期（月度）更新 RFM 分类，观察用户在象限间的迁移趋势</>}
+            height={300}
           >
-            <Pie
-              data={rfm}
-              angleField="user_count"
-              colorField="quadrant"
-              color={CHART_COLORS}
-              label={{ text: 'percentage', style: { fontSize: 10 } }}
-            />
+            <PieWithLegend data={rfmPieData} loading={rfmLoading} height={280} />
           </ChartCard>
         </Col>
       </Row>
@@ -149,7 +147,7 @@ export default function Value() {
             error={tokenRankingError}
             empty={tokenRanking.length === 0 && !tokenRankingLoading && !tokenRankingError}
             onRetry={loadTokenRanking}
-            description="各模型的 Token 消耗排名（区分 Prompt 和 Completion），了解模型级算力消耗分布"
+            description={<><b>指标含义：</b>各模型在筛选时间段内的 Prompt Token 和 Completion Token 消耗量排名对比<br /><b>业务意义：</b>了解各模型的算力资源消耗分布，识别 Token 消耗大户，为资源规划和模型选型提供依据<br /><b>计算逻辑：</b>按 model_id 和 Token 类型（prompt/completion）分组，SUM(token_count)，按总量降序排列<br /><b>补充说明：</b>Prompt 和 Completion 的比例可反映模型的使用场景：高 Prompt 说明输入量大（如文档分析），高 Completion 说明生成内容多（如写作辅助）</>}
           >
             <Column
               data={tokenRanking.flatMap(r => [
@@ -171,7 +169,7 @@ export default function Value() {
             error={modelOutputError}
             empty={modelOutput.length === 0 && !modelOutputLoading && !modelOutputError}
             onRetry={loadModelOutput}
-            description="各模型的 Completion Token 产出排名（含请求数、平均产出长度），评估模型的内容生成效率"
+            description={<><b>指标含义：</b>各模型生成的 Completion Token 总量排名，同时展示对应的请求数和平均每次产出长度<br /><b>业务意义：</b>评估模型的内容生成效率。平均产出长度可反映模型的回答详细程度和用户对生成内容的期望<br /><b>计算逻辑：</b>按 model_id 分组，SUM(completion_tokens)、COUNT(*)、AVG(completion_tokens)，按 Completion Token 总量降序排列<br /><b>补充说明：</b>平均产出长度并非越长越好，应与任务类型结合分析。代码生成和文档写作通常产出较长</>}
           >
             <Column
               data={modelOutput}
@@ -192,7 +190,7 @@ export default function Value() {
             error={channelEffError}
             empty={channelEff.length === 0 && !channelEffLoading && !channelEffError}
             onRetry={loadChannelEff}
-            description="各渠道每美元产出的 Token 数（Tokens per Dollar），评估 AI 供应商的成本效益"
+            description={<><b>指标含义：</b>各 AI 供应商渠道每花费 1 美元所获得的 Token 产出量（Tokens per Dollar）<br /><b>业务意义：</b>评估各渠道的成本效益（性价比），辅助渠道选择和预算分配决策，优化支出结构<br /><b>计算逻辑：</b>SUM(total_tokens) ÷ SUM(total_cost)。按 channel_id 分组计算，数值越高说明性价比越好<br /><b>补充说明：</b>不同模型的价格差异大，对比时应尽量同模型对比以消除模型因素。需同时关注质量和延迟</>}
           >
             <Column
               data={channelEff}
@@ -210,7 +208,7 @@ export default function Value() {
             error={projectContribError}
             empty={projectLines.length === 0 && !projectContribLoading && !projectContribError}
             onRetry={loadProjectContrib}
-            description="各项目请求量和 Token 消耗的时间序列趋势，了解项目级的使用分布和变化"
+            description={<><b>指标含义：</b>各项目在时间轴上的请求量和 Token 消耗变化趋势，支持多项目对比<br /><b>业务意义：</b>了解各项目的使用规模变化和增长趋势，评估项目的贡献度和资源消耗合理性<br /><b>计算逻辑：</b>按项目和日期分组，COUNT(*) 请求量和 SUM(total_tokens) Token 消耗，按日期升序展示多系列折线<br /><b>补充说明：</b>可辅助项目维度成本核算和资源配额管理，发现异常增长的"爆款"项目</>}
           >
             <Line
               data={projectLines}

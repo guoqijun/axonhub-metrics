@@ -50,3 +50,8 @@ async def get_project_ranking(params: FilterParams = Depends(), service: Adoptio
 @router.get("/user_penetration")
 async def get_user_penetration(params: FilterParams = Depends(), service: AdoptionService = Depends(_get_service)):
     return await service.get_user_penetration(params)
+
+
+@router.get("/org_user_distribution")
+async def get_org_user_distribution(params: FilterParams = Depends(), service: AdoptionService = Depends(_get_service)):
+    return await service.get_org_user_distribution(params)

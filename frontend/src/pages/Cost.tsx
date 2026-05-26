@@ -129,7 +129,7 @@ export default function Cost() {
             error={tokenFeeError}
             empty={tokenFee.length === 0 && !tokenFeeLoading && !tokenFeeError}
             onRetry={loadTokenFee}
-            description="Token 消耗与费用的时间序列趋势（区分 Prompt 和 Completion），关联分析用量与成本变化"
+            description={<><b>指标含义：</b>每日 Prompt Token、Completion Token 消耗量与对应费用的双轴时间序列趋势<br /><b>业务意义：</b>关联分析 Token 用量与成本的联动关系，发现成本异常波动的原因（是用量增长还是模型切换）<br /><b>计算逻辑：</b>按日期和 Token 类型分组，SUM(token_count) 和 SUM(total_cost)，按日期升序排列<br /><b>补充说明：</b>费用 = Token 数 × 模型单价，模型单价差异大（如 GPT-4 是 GPT-3.5 的 10-30 倍），切换模型会显著影响总费用</>}
           >
             <Line
               data={tokenFee.flatMap(d => [
@@ -150,7 +150,7 @@ export default function Cost() {
             error={modelDistError}
             empty={modelDist.length === 0 && !modelDistLoading && !modelDistError}
             onRetry={loadModelDist}
-            description="各模型产生的费用对比，了解成本构成的模型分布，定位高消耗模型"
+            description={<><b>指标含义：</b>按 AI 模型分组统计的总费用对比，展示各模型产生的费用金额<br /><b>业务意义：</b>了解平台成本构成的模型分布，定位高消耗模型，为成本优化和模型选型提供数据支持<br /><b>计算逻辑：</b>按 model_id 分组，SUM(total_cost)，按费用降序排列<br /><b>补充说明：</b>高端模型（如 GPT-4、Claude Opus）虽然价格高但能力更强，应结合业务价值综合评估是否值得</>}
           >
             <Column
               data={modelDist}
@@ -172,7 +172,7 @@ export default function Cost() {
             error={channelCompError}
             empty={channelComp.length === 0 && !channelCompLoading && !channelCompError}
             onRetry={loadChannelComp}
-            description="各渠道产生的费用对比，评估不同 AI 供应商的成本表现，辅助渠道选择决策"
+            description={<><b>指标含义：</b>各 AI 供应商渠道产生的总费用对比<br /><b>业务意义：</b>评估不同渠道的成本表现，辅助渠道选择决策和预算分配<br /><b>计算逻辑：</b>按 channel_id 分组，SUM(total_cost)，按费用降序排列<br /><b>补充说明：</b>费用差异可能来自渠道定价策略不同或使用量的差异，建议结合单价分析以获取更准确的成本对比</>}
           >
             <Column
               data={channelComp}
@@ -190,7 +190,7 @@ export default function Cost() {
             error={userTopError}
             empty={userTop.length === 0 && !userTopLoading && !userTopError}
             onRetry={loadUserTop}
-            description="产生费用最多的 Top 用户排名，识别高消耗用户，辅助成本控制和预算分配"
+            description={<><b>指标含义：</b>筛选时间段内产生费用最多的前 10 名用户排名，包含费用金额、请求数和 Token 消耗<br /><b>业务意义：</b>识别高消耗用户，进行重点成本管理和预算分配。防止个别用户过度消耗预算<br /><b>计算逻辑：</b>按 employee_id 分组，SUM(total_cost)、COUNT(*)、SUM(token_count)，按费用降序排列 LIMIT 10<br /><b>补充说明：</b>高费用用户可能是高频使用者，也可能是使用了高单价模型。建议设置用户级预算告警</>}
           >
             <MetricTable
               dataSource={userTop}
@@ -217,7 +217,7 @@ export default function Cost() {
             error={projectDailyError}
             empty={projectDaily.length === 0 && !projectDailyLoading && !projectDailyError}
             onRetry={loadProjectDaily}
-            description="各项目的每日费用趋势，了解项目级成本消耗，辅助项目维度的成本核算"
+            description={<><b>指标含义：</b>各项目在时间轴上的每日费用变化趋势，多项目折线对比<br /><b>业务意义：</b>了解项目维度的成本消耗趋势，辅助项目成本核算和预算控制<br /><b>计算逻辑：</b>按项目和日期分组，SUM(total_cost)，按日期升序展示多系列对比<br /><b>补充说明：</b>可设置项目级预算上限，超出自动告警。适合对内部部门进行成本回收（chargeback）的场景</>}
           >
             <Line
               data={projectDaily.map(p => ({
@@ -238,7 +238,7 @@ export default function Cost() {
             error={cacheHitError}
             empty={cacheHit.length === 0 && !cacheHitLoading && !cacheHitError}
             onRetry={loadCacheHit}
-            description="缓存命中率的时间序列趋势，命中率越高说明重复查询越多，缓存策略越有效，可节省成本"
+            description={<><b>指标含义：</b>每日缓存命中率（Cache Hit Rate）的时间序列趋势<br /><b>业务意义：</b>缓存命中率越高说明重复查询被缓存直接返回的比例越高，可以有效降低响应延迟和节省 API 调用费用<br /><b>计算逻辑：</b>COUNT(cache_hit=true) ÷ COUNT(*) × 100%，按日期分组计算。缓存命中表示请求结果直接从缓存返回，未调用上游 API<br /><b>补充说明：</b>缓存命中率受业务场景影响大，重复查询多的场景（如 FAQ）命中率高。理想值在 30% 以上</>}
           >
             <Line
               data={cacheHit}
@@ -260,7 +260,7 @@ export default function Cost() {
             error={reasoningError}
             empty={reasoning.length === 0 && !reasoningLoading && !reasoningError}
             onRetry={loadReasoning}
-            description="推理 Token 占总 Token 的比例趋势，了解推理计算的开销占比，辅助模型选择优化"
+            description={<><b>指标含义：</b>推理 Token（reasoning_tokens 或 thinking_tokens）占总 Token 消耗的比例变化趋势<br /><b>业务意义：</b>推理 Token 是模型内部推理过程的消耗，占比高说明用户大量使用需要深度推理的复杂任务场景<br /><b>计算逻辑：</b>SUM(reasoning_tokens) ÷ SUM(total_tokens) × 100%，按日期分组展示趋势<br /><b>补充说明：</b>推理 Token 通常不计入输出内容但对 API 调用仍然计费。高推理占比意味着使用场景多为复杂推理任务</>}
           >
             <Line
               data={reasoning}
@@ -278,7 +278,7 @@ export default function Cost() {
             error={forecastError}
             empty={forecastActual.length === 0 && !forecastLoading && !forecastError}
             onRetry={loadForecast}
-            description="基于历史成本数据的趋势预测，辅助预算规划和成本控制决策"
+            description={<><b>指标含义：</b>基于历史成本数据使用简单时间序列模型（如线性回归或移动平均）预测的未来成本趋势<br /><b>业务意义：</b>辅助预算规划和成本控制决策，提前预见成本增长趋势，及时采取措施<br /><b>计算逻辑：</b>基于历史每日成本数据，使用线性回归或指数平滑预测未来 N 天的成本走势，同时展示实际值和预测值<br /><b>补充说明：</b>预测仅供参考，实际成本受业务波动、模型切换、促销活动等因素影响，建议定期更新预测模型</>}
           >
             <Line
               data={[...forecastActual, ...forecastPred]}

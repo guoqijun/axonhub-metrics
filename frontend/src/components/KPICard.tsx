@@ -12,7 +12,7 @@ interface KPICardProps {
   trend?: 'up' | 'down' | null
   trendValue?: string
   loading?: boolean
-  description?: string
+  description?: React.ReactNode
 }
 
 export default function KPICard({
@@ -27,7 +27,7 @@ export default function KPICard({
           <span>
             {title}
             {description && (
-              <Tooltip title={description}>
+              <Tooltip title={description} overlayClassName="metric-tip">
                 <InfoCircleOutlined className="info-icon" style={{ color: token.colorTextTertiary }} />
               </Tooltip>
             )}

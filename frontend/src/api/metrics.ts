@@ -115,6 +115,11 @@ export interface ProjectRanking {
   user_count: number
 }
 
+export interface OrgUserDistribution {
+  employee_org_name: string | null
+  user_count: number
+}
+
 export async function fetchDAUMauTrend(filters: FilterState): Promise<DAUMauPoint[]> {
   const { data } = await client.get('/adoption/dau_mau_trend', { params: toParams(filters) })
   return data
@@ -152,6 +157,11 @@ export async function fetchActivityHeatmap(filters: FilterState): Promise<Activi
 
 export async function fetchProjectRanking(filters: FilterState): Promise<ProjectRanking[]> {
   const { data } = await client.get('/adoption/project_ranking', { params: toParams(filters) })
+  return data
+}
+
+export async function fetchOrgUserDistribution(filters: FilterState): Promise<OrgUserDistribution[]> {
+  const { data } = await client.get('/adoption/org_user_distribution', { params: toParams(filters) })
   return data
 }
 
