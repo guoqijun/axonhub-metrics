@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Flex } from 'antd'
 import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
-import PieWithLegend from '../components/PieWithLegend'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
@@ -172,9 +171,14 @@ export default function Errors() {
             empty={typeDist.length === 0 && !typeDistLoading && !typeDistError}
             onRetry={loadTypeDist}
             description={<><b>指标含义：</b>按 HTTP 状态码分组的错误数量和占比的分布情况<br /><b>业务意义：</b>了解错误的构成成分，优先解决高频错误类型，最大化提升平台稳定性<br /><b>计算逻辑：</b>按 status 分组，COUNT(*)，计算各状态码占比 = 该状态数量 ÷ 总错误数 × 100%<br /><b>补充说明：</b>建议对高频错误设置自动告警和自动恢复流程。401/403 通常是鉴权问题，500 是上游服务问题</>}
-            height={300}
           >
-            <PieWithLegend data={typePieData} loading={typeDistLoading} height={280} />
+            <Column
+              data={typePieData}
+              xField="type"
+              yField="value"
+              color={CHART_PRIMARY}
+              axis={{ x: { title: '状态码', labelAutoHide: true }, y: { title: '次数' } }}
+            />
           </ChartCard>
         </Col>
       </Row>
@@ -298,9 +302,14 @@ export default function Errors() {
                 empty={retryRate.length === 0 && !retryRateLoading && !retryRateError}
                 onRetry={loadRetryRate}
                 description={<><b>指标含义：</b>被重试的请求最终的成功和失败比例分布<br /><b>业务意义：</b>评估重试机制的有效性和自动恢复能力。高重试成功率说明故障是瞬时的，重试策略有效<br /><b>计算逻辑：</b>对 trace_id 关联的重试请求，按最终状态分组统计。成功 ÷ 总重试数 × 100%<br /><b>补充说明：</b>如果重试成功率低，说明故障是持续性的（如上游宕机），重试只会浪费资源和增加成本</>}
-                height={270}
               >
-                <PieWithLegend data={retryPieData} loading={retryRateLoading} height={240} />
+                <Column
+                  data={retryPieData}
+                  xField="type"
+                  yField="value"
+                  color={CHART_PRIMARY}
+                  axis={{ x: { title: '类别', labelAutoHide: true }, y: { title: '追踪数' } }}
+                />
               </ChartCard>
             </Col>
             <Col xs={24} sm={12}>
@@ -311,9 +320,14 @@ export default function Errors() {
                 empty={statusCodeDist.length === 0 && !statusCodeDistLoading && !statusCodeDistError}
                 onRetry={loadStatusCodeDist}
                 description={<><b>指标含义：</b>所有请求中按 HTTP 状态码分组统计的占比分布<br /><b>业务意义：</b>了解请求的完整响应画像，包括成功、失败、限流、鉴权失败等各类响应的比例<br /><b>计算逻辑：</b>按 status 分组 COUNT(*)，计算该状态码占所有请求的百分比<br /><b>补充说明：</b>正常情况 2xx 应占 95% 以上。429 比例高说明需要提高配额或优化请求频率，5xx 比例高需要关注上游服务</>}
-                height={270}
               >
-                <PieWithLegend data={statusPieData} loading={statusCodeDistLoading} height={240} />
+                <Column
+                  data={statusPieData}
+                  xField="type"
+                  yField="value"
+                  color={CHART_PRIMARY}
+                  axis={{ x: { title: '状态码', labelAutoHide: true }, y: { title: '次数' } }}
+                />
               </ChartCard>
             </Col>
           </Row>

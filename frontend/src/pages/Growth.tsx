@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Flex } from 'antd'
 import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
-import PieWithLegend from '../components/PieWithLegend'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
@@ -206,10 +205,14 @@ export default function Growth() {
             empty={marketShare.length === 0 && !marketShareLoading && !marketShareError}
             onRetry={loadMarketShare}
             description={<><b>指标含义：</b>各 AI 供应商渠道的请求量市场份额占比分布（基于最新月份数据）<br /><b>业务意义：</b>了解不同 AI 供应商的渠道格局变化，评估各渠道的竞争力和用户偏好<br /><b>计算逻辑：</b>按 channel_id 分组，COUNT(*) 各渠道请求数。占比 = 渠道请求数 ÷ 总请求数 × 100%<br /><b>补充说明：</b>市场份额变化反映渠道策略调整的效果。过度依赖单一渠道存在风险，建议保持渠道多元化</>}
-            height={300}
           >
-            <PieWithLegend data={sharePieData} loading={marketShareLoading} height={280}
-              valueFormatter={(v) => v.toFixed(1) + '%'} />
+            <Column
+              data={sharePieData}
+              xField="type"
+              yField="value"
+              color={CHART_PRIMARY}
+              axis={{ x: { title: '渠道', labelAutoHide: true }, y: { title: '份额(%)' } }}
+            />
           </ChartCard>
         </Col>
         <Col xs={24} lg={12}>

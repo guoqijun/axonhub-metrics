@@ -3,7 +3,6 @@ import { Row, Col, Flex } from 'antd'
 import { Column, Line } from '@ant-design/charts'
 import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
-import PieWithLegend from '../components/PieWithLegend'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
@@ -314,9 +313,14 @@ export default function Adoption() {
             empty={orgDist.length === 0 && !orgDistLoading && !orgDistError}
             onRetry={loadOrgDist}
             description={<><b>指标含义：</b>按员工所属组织（employee_org_name）分组的活跃用户数分布<br /><b>业务意义：</b>了解平台的用户来自哪些组织，评估各组织的采用率和推广覆盖效果<br /><b>计算逻辑：</b>按 employee_org_name GROUP BY，COUNT(DISTINCT employee_id)，统计每个组织的去重活跃用户数<br /><b>补充说明：</b>组织分布越分散说明平台覆盖范围越广，若集中在少数组织说明推广仍有拓展空间</>}
-            height={300}
           >
-            <PieWithLegend data={orgPieData} loading={orgDistLoading} height={280} />
+            <Column
+              data={orgPieData}
+              xField="type"
+              yField="value"
+              color={CHART_PRIMARY}
+              axis={{ x: { title: '组织', labelAutoHide: true }, y: { title: '用户数' } }}
+            />
           </ChartCard>
         </Col>
         <Col xs={24} lg={12}>

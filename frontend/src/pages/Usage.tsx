@@ -3,7 +3,6 @@ import { Row, Col, Flex } from 'antd'
 import { Column, Line } from '@ant-design/charts'
 import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
-import PieWithLegend from '../components/PieWithLegend'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_PRIMARY } from '../config/chartTheme'
@@ -184,9 +183,14 @@ export default function Usage() {
             empty={sessionDur.length === 0 && !sessionDurLoading && !sessionDurError}
             onRetry={loadSessionDur}
             description={<><b>指标含义：</b>按 trace_id 计算会话的起止时间差，并按时长分桶统计用户分布<br /><b>业务意义：</b>了解用户单次使用时长分布，评估产品的使用深度和使用场景类型<br /><b>计算逻辑：</b>按 trace_id 分组计算 MAX(created_at) - MIN(created_at)，按分钟/小时分桶统计<br /><b>补充说明：</b>短会话（&lt;1 分钟）通常为简单查询，长会话（&gt;10 分钟）通常为复杂任务或多次迭代</>}
-            height={300}
           >
-            <PieWithLegend data={sessionPieData} loading={sessionDurLoading} height={280} />
+            <Column
+              data={sessionPieData}
+              xField="type"
+              yField="value"
+              color={CHART_PRIMARY}
+              axis={{ x: { title: '时长', labelAutoHide: true }, y: { title: '会话数' } }}
+            />
           </ChartCard>
         </Col>
         <Col xs={24} lg={12}>

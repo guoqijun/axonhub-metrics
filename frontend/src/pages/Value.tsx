@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from 'react'
 import { Row, Col, Flex } from 'antd'
 import { Column, Line } from '@ant-design/charts'
 import ChartCard from '../components/ChartCard'
-import PieWithLegend from '../components/PieWithLegend'
 import MetricTable from '../components/MetricTable'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
@@ -132,9 +131,14 @@ export default function Value() {
             empty={rfm.length === 0 && !rfmLoading && !rfmError}
             onRetry={loadRfm}
             description={<><b>指标含义：</b>基于请求频率高频（≥100 次）和费用高价（≥$10）两个维度，将用户划分为四个象限：高频高价值、高频低价值、低频高价值、低频低价值<br /><b>业务意义：</b>辅助用户分层运营，对不同象限用户采取差异化策略。高频高价值用户是核心用户应重点维护，低频高价值用户有提升频率的潜力<br /><b>计算逻辑：</b>统计每个用户的请求总数和总费用，以 100 次请求和 $10 费用为阈值进行四象限分类，COUNT 各象限用户数<br /><b>补充说明：</b>阈值可根据平台的实际情况调整。建议定期（月度）更新 RFM 分类，观察用户在象限间的迁移趋势</>}
-            height={300}
           >
-            <PieWithLegend data={rfmPieData} loading={rfmLoading} height={280} />
+            <Column
+              data={rfmPieData}
+              xField="type"
+              yField="value"
+              color={CHART_PRIMARY}
+              axis={{ x: { title: '象限', labelAutoHide: true }, y: { title: '用户数' } }}
+            />
           </ChartCard>
         </Col>
       </Row>

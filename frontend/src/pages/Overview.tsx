@@ -3,7 +3,6 @@ import { Row, Col, Flex } from 'antd'
 import { Column, Line } from '@ant-design/charts'
 import KPICard from '../components/KPICard'
 import ChartCard from '../components/ChartCard'
-import PieWithLegend from '../components/PieWithLegend'
 import { useFilterStore } from '../hooks/useFilters'
 import { CHART_COLORS, CHART_PRIMARY } from '../config/chartTheme'
 import {
@@ -208,9 +207,14 @@ export default function Overview() {
             empty={modelDist.length === 0 && !modelDistLoading && !modelDistError}
             onRetry={loadModelDist}
             description={<><b>指标含义：</b>各 AI 模型在总请求量中的占比分布<br /><b>业务意义：</b>了解用户对不同模型的选择偏好，指导模型选型决策和资源采购<br /><b>计算逻辑：</b>按 model_id 分组 COUNT(*)，计算各模型占比 = 模型请求数 ÷ 总请求数 × 100%<br /><b>补充说明：</b>结合费用数据可评估各模型的 ROI，低成本高性能模型应优先推广</>}
-            height={300}
           >
-            <PieWithLegend data={modelPieData} loading={modelDistLoading} height={280} />
+            <Column
+              data={modelPieData}
+              xField="type"
+              yField="value"
+              color={CHART_PRIMARY}
+              axis={{ x: { title: '模型', labelAutoHide: true }, y: { title: '请求数' } }}
+            />
           </ChartCard>
         </Col>
         <Col xs={24} lg={12}>
